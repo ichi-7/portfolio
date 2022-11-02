@@ -1,24 +1,7 @@
 <div class="container" style="height: 90%">
-  <div class="row" style="height: 10%">
-    <div class="">
-      <p>MAP：ここにはメンバーが投稿したスポット情報の一覧を表示する</p>
-    </div>
-  </div>
-  <div class="row" style="height: 90%">
-    <div class="col-2 bg-white">
-    </div>
-    
-    <div class="col-10">
-      <!-- 地名入力用のinputを追加 -->
-      <input id="address" type="text_field" value="東京駅">
-      
-      <!-- buttonをクリックしたらcodeAddressを実行　-->
-      <input type="button" value="移動" onclick="codeAddress()">
-      <div style="height: 80%" id='map'></div>
-      
-      <input id="lat" type="text_field" value="緯度">
-      <input id="lng" type="text_field" value="経度">
-      <input id="pos_address" type="text_field" value="住所">
+  <div class="row" style="height: 100%">
+    <div class="col-6">
+      <div class="" style="height: 80%; margin-top: 10%" id='map'></div>
       
       <script>
         // codeAddressでも使用する為、mapを関数外で定義&geocoderも用意
@@ -38,7 +21,7 @@
           map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: 35.68136165284377, lng: 139.76705995711325},
           // 地図の拡大率(大きいほど拡大 1〜21)
-          zoom: 10
+          zoom: 12
           });
         }
         
@@ -63,7 +46,7 @@
               
               // 吹き出しに表示する内容
               info_window = new google.maps.InfoWindow({
-                content: pos_address + "<br>" + '<a href="#">このスポットの詳細情報を見る</a>'
+                content: pos_address + "<br>" + `<a href="https://www.google.com/maps/search/${pos_address}" target="_blank" rel="noopener noreferrer">Googleマップで情報を見る</a>`
               });
               
               // 吹き出しをマーカ上に出す
@@ -82,6 +65,40 @@
         }
       </script>
       <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA32P06ny7qVMK9WbcLQjGktRTKNcAXDZI&callback=initMap" async defer></script>
+    </div>
+    
+    <div class="col-6">
+      <div style="height: 80%; margin-top: 10%">
+        <%= form_with model: @spot do |f| %>
+          <h3>投稿フォーム</h3>
+          <!-- 情報検索・表示・入力用のテキストフィールド -->
+          <div class="form-group border-top pt-3">
+            <%= f.label 'スポット名' %>
+            <%= f.text_field :title, class: "form-control mb-2", id: "address", value: "東京駅" %>
+            <div class="text-center">
+              <%= f.button "マップから検索", class: "btn btn-outline-success", style: "width: 45%", type: 'button', onclick: "codeAddress()" %>
+            </div>
+          </div>
+          <div class="form-group">
+            <%= f.hidden_field :test1, class: "input-group-text form-control mb-2", id: "pos_address", value: "位置情報" %>
+            <%= f.hidden_field :test2, class: "input-group-text", id: "lat", value: "緯度" %>
+            <%= f.hidden_field :test3, class: "input-group-text", id: "lng", value: "経度" %>
+          </div>
+          <!-- ユーザ入力用テキストエリア -->
+          <div class="form-group">
+            <%= f.label "写真" %>
+            <%= f.file_field :image, accept: "image/*", class: "form-control-file" %>
+          </div>
+          <div class="form-group">
+            <%= f.label 'スポット情報' %>
+            <%= f.text_area :body, rows: "4", class: "form-control" %>
+          </div>
+          <div class="text-center">
+            <%= f.submit "投稿", class: "btn btn-outline-primary mr-2", style: "width: 45%" %>
+            <%= link_to "マップに戻る", maps_path, class: "btn btn-outline-secondary ml-2", style: "width: 45%" %>
+          </div>
+        <% end %>
+      </div>
     </div>
   </div>
 </div>
