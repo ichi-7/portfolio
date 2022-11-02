@@ -21,7 +21,7 @@
           map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: 35.68136165284377, lng: 139.76705995711325},
           // 地図の拡大率(大きいほど拡大 1〜21)
-          zoom: 13
+          zoom: 12
           });
         }
         
@@ -74,15 +74,15 @@
           <!-- 情報検索・表示・入力用のテキストフィールド -->
           <div class="form-group border-top pt-3">
             <%= f.label 'スポット名' %>
-            <%= f.text_field :title, class: "form-control mb-2", id: "address", value: "東京駅" %>
+            <%= f.text_field :name, class: "form-control mb-2", id: "address", value: "東京駅" %>
             <div class="text-center">
               <%= f.button "マップから検索", class: "btn btn-outline-success", style: "width: 45%", type: 'button', onclick: "codeAddress()" %>
             </div>
           </div>
           <div class="form-group">
-            <%= f.hidden_field :test1, class: "input-group-text form-control mb-2", id: "pos_address", value: "位置情報" %>
-            <%= f.hidden_field :test2, class: "input-group-text", id: "lat", value: "緯度" %>
-            <%= f.hidden_field :test3, class: "input-group-text", id: "lng", value: "経度" %>
+            <%= f.hidden_field :position, class: "input-group-text form-control mb-2", id: "pos_address", value: "位置情報" %>
+            <%= f.hidden_field :lat, class: "input-group-text", id: "lat", value: "緯度" %>
+            <%= f.hidden_field :lng, class: "input-group-text", id: "lng", value: "経度" %>
           </div>
           <!-- ユーザ入力用テキストエリア -->
           <div class="form-group">
@@ -91,7 +91,7 @@
           </div>
           <div class="form-group">
             <%= f.label 'スポット情報' %>
-            <%= f.text_area :body, rows: "4", class: "form-control" %>
+            <%= f.text_area :info, rows: "4", class: "form-control", id: "long_name" %>
           </div>
           <div class="text-center">
             <%= f.submit "投稿", class: "btn btn-outline-primary mr-2", style: "width: 45%" %>
