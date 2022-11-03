@@ -1,9 +1,17 @@
-<div class="container d-flex align-items-center" style="height: 90%">
-  <div class="row" style="width: 100%">
-    <div class="mx-auto">
-      <h2 class="text-center mb-3">旅スポ</h2>
-      <%= link_to "new", new_spot_path, class: "btn btn-sm btn-secondary" %>
-      <%= link_to "map", maps_path, class: "btn btn-sm btn-secondary" %>
+<div class="container position-relative" style="height: 90%">
+  <div class="row d-flex align-items-center" style="height: 100%; width: 100%">
+    <div class="w-100 justify-content-center" style="text-align: center">
+      <%= image_tag 'main_logo', size: "300x300", class: "mb-2" %>
+      <h1 class="text-center text-dark kiwi_kaku">　旅を、共有しよう。</h1>
+      <div class="mt-4">
+        <% if user_signed_in? %>
+          <%= link_to "マップを見る", maps_path, class: "btn btn-primary" %>
+        <% else %>
+          <%= link_to "ゲストでログイン", users_guest_sign_in_path, method: :post, class: "btn btn-secondary" %>
+        <% end %>
+        <br><br>
+        <%= flash[:notice] %>
+      </div><br>
     </div>
   </div>
 </div>
