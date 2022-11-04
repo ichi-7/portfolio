@@ -1,1 +1,30 @@
-<h1>user index</h1>
+<div class="mx-auto mt-5 mb-4">
+  <h2 class="kiwi-kaku font-weight-bold" style= "color: #5c9291; letter-spacing: 0.12em;"><i class="fas fa-map-marker-alt"></i> ユーザー</h2>
+</div>
+
+<div class="card-list-container mx-auto d-flex flex-wrap border-top border-bottom pb-5 pt-4" style="width: 85%">
+  <% @users.each do |user| %>
+  <div class="card mx-auto mt-3 border-0" style="width: calc(100% / 4); background-color:rgba(0,0,0,0)">
+    <div class="card-body mx-auto">
+      <div class="row d-flex justify-content-center">
+        <% if user.image.attached? %>
+          <%= image_tag user.image, class: "rounded-circle mb-3", style: "max-width: 18vw; height: 18vw; object-fit: cover" %>
+        <% else %>
+          <%= image_tag 'noimage', class: "rounded-circle mb-3", style: "max-width: 100%; height: 18vw; object-fit: cover" %>
+        <% end %>
+      </div>
+      <div class="row px-2">
+        <div class="mx-auto text-center">
+          <div class="my-1 text-center">
+            <span class="h5 font-weight-bold"><%= link_to user.name, user_path(user), style: "color: #5c9291" %></span>
+          </div>
+          <span class="font-weight-bold">登録日：<%= user.created_at.strftime("%Y.%m.%d") %></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% end %>
+</div>
+<div class="d-flex justify-content-center mb-4 py-5">
+  <span class="h5 font-weight-bold" style="color: #5c9291; color: #5c9291;"><i class="fas fa-map-marker-alt"></i> <%= link_to "マップを見る", maps_path, style: "color: #5c9291; color: #5c9291; letter-spacing: 0.12em" %></span>
+</div>

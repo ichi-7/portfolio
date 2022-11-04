@@ -1,21 +1,21 @@
 <div class="container" style="height: 90%">
-  <div class="row" style="height: 10%">
-    <div class="">
-      <p>MAP：ここにはメンバーが投稿したスポット情報の一覧を表示する</p>
+  <div class="row flex-row-reverse" style="height: 100%">
+    <div class="col-4 mt-4">
+      <div class="border-bottom pb-2">
+        <span class="h2 font-weight-bold" style="color: #5c9291; letter-spacing: 0.12em;">共有マップ</span>
+      </div>
     </div>
-  </div>
-  <div class="row" style="height: 90%">
-    <div>
-      <div style="height: 80%" id='map'></div>
+    <div class="col-8">
+      <div style="height: 90%; margin-top: 5%" id='map'></div>
       
       <!-- 地名入力用のinputを追加 -->
-      <input id="address" type="text_field" value="東京駅">
+      <!--<input id="address" type="text_field" value="東京駅">-->
       
       <!-- buttonをクリックしたらcodeAddressを実行　-->
-      <input type="button" value="移動" onclick="codeAddress()">
-      <input id="lat" type="text_field" value="緯度">
-      <input id="lng" type="text_field" value="経度">
-      <input id="pos_address" type="text_field" value="住所">
+      <!--<input type="button" value="移動" onclick="codeAddress()">-->
+      <!--<input id="lat" type="text_field" value="緯度">-->
+      <!--<input id="lng" type="text_field" value="経度">-->
+      <!--<input id="pos_address" type="text_field" value="住所">-->
       
       <script>
         // codeAddressでも使用する為、mapを関数外で定義&geocoderも用意
@@ -35,7 +35,7 @@
           map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: 35.68136165284377, lng: 139.76705995711325},
           // 地図の拡大率(大きいほど拡大 1〜21)
-          zoom: 10
+          zoom: 12
           });
         }
         
@@ -60,7 +60,7 @@
               
               // 吹き出しに表示する内容
               info_window = new google.maps.InfoWindow({
-                content: pos_address + "<br>" + '<a href="#">このスポットの詳細情報を見る</a>'
+                content: pos_address + "<br>" + `<a href="https://www.google.com/maps/search/${pos_address}" target="_blank" rel="noopener noreferrer">Googleマップで周辺情報を見る</a>`
               });
               
               // 吹き出しをマーカ上に出す

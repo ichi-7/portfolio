@@ -16,8 +16,8 @@
         <%= f.text_area :introduction, rows: "3", class: "form-control", style: "width: 94%" %>
       </div>
       <div class="text-left">
-        <%= f.submit "編集", class: "btn btn-outline-success mr-2", style: "width: 45%" %>
-        <%= link_to "戻る", users_path, class: "btn btn-outline-secondary ml-2", style: "width: 45%" %>
+        <%= f.submit "更新", class: "btn btn-outline-success mr-2", style: "width: 45%" %>
+        <%= link_to "戻る", user_path(@user), class: "btn btn-outline-secondary ml-2", style: "width: 45%" %>
       </div>
     <% end %>
   </div>

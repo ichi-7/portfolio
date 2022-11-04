@@ -16,7 +16,7 @@
         <%= f.text_area :info, rows: "3", class: "form-control", style: "width: 94%" %>
       </div>
       <div class="text-left">
-        <%= f.submit "編集", class: "btn btn-outline-success mr-2", style: "width: 45%" %>
+        <%= f.submit "更新", class: "btn btn-outline-success mr-2", style: "width: 45%" %>
         <%= link_to "削除", post_path(@post.id), method: :delete, class: "btn btn-outline-danger ml-2", style: "width: 45%", "data-confirm" => "本当に削除しますか？" %>
       </div>
     <% end %>

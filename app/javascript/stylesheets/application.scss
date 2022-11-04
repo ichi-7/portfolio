@@ -13,7 +13,7 @@ h1.kiwi_kaku {
 .card-list-container::after {
   content: "";
   display: block;
-  width: calc(100% / 4);
+  max-width: calc(100% / 4);
 }
 
 .card-list-container::before {

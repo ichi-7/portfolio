@@ -5,8 +5,7 @@
       <h1 class="text-center text-dark kiwi_kaku">　旅を、共有しよう。</h1>
       <div class="mt-4">
         <% if user_signed_in? %>
-          <%= link_to "マップを見る", maps_path, class: "btn btn-outline-secondary mx-2" %>
-          <%= link_to "投稿を見る", posts_path, class: "btn btn-outline-secondary mx-2" %>
+          <%= link_to "このサイトについて", about_path, class: "btn btn-outline-secondary mx-2" %>
         <% else %>
           <%= link_to "ゲストでログイン", users_guest_sign_in_path, method: :post, class: "btn btn-secondary" %>
         <% end %>
