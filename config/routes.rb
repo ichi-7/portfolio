@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   
   root to: 'homes#top'
   get '/about' => 'homes#about'
+  resources :users
   resources :maps
   resources :spots
   resources :posts

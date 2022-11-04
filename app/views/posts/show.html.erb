@@ -1,0 +1,29 @@
+<div class="container">
+  <div class="row d-flex flex-column mt-5 w-50 mx-auto">
+    <div class="mb-3">
+      <span class="font-weight-bold"><%= @post.created_at.strftime("%Y.%m.%d") %></span> | 
+      <span class="card-title font-weight-bold"><i class="fas fa-map-marker-alt"></i> <%= @post.spot.name %></span><br><br>
+      <span class="h2 font-weight-bold" style="color: #5c9291; letter-spacing: 0.12em;"><%= @post.title %></span>
+    </div>
+    <div class="d-flex justify-content-center border-top pt-5 pb-3">
+      <% if @post.image.attached? %>
+        <%= image_tag @post.image, class: "rounded mb-3", style: "max-width: 100%; height: 33vw; object-fit: cover" %>
+      <% else %>
+        <%= image_tag 'noimage', class: "rounded mb-3", style: "max-width: 100%; height: 33vw; object-fit: cover" %>
+      <% end %>
+    </div>
+    <div class="mb-3">
+      <span style="line-height: 4"><%= @post.info %></span>
+    </div>
+    <div class="mb-3 d-flex justify-content-end">
+      <% if @post.user_id == current_user.id %>
+        <span><i class="fas fa-edit"></i> <%= link_to "記事を編集する", edit_post_path(@post.id) %></span>
+      <% else %>
+        <span><i class="far fa-user"></i> <%= link_to @post.user.name, user_path(@post.user.id) %></span>
+      <% end %>
+    </div>
+    <div class="d-flex justify-content-center border-top py-5">
+      <span class="h5 font-weight-bold" style="color: #5c9291; color: #5c9291;"><i class="fas fa-map-marker-alt"></i> <%= link_to "投稿一覧へ", posts_path, style: "color: #5c9291; color: #5c9291; letter-spacing: 0.12em" %></span>
+    </div>
+  </div>
+</div>

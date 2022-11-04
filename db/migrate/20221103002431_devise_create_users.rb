@@ -34,6 +34,7 @@ class DeviseCreateUsers < ActiveRecord::Migration[6.1]
       
       ## 名前用カラム
       t.string :name
+      t.text :introduction
 
       t.timestamps null: false
     end

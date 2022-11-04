@@ -19,10 +19,10 @@
             <li class="nav-item mr-4">
               <span><i class="fas fa-map-marker-alt"></i> <%= link_to '旅スポについて', about_path, class: "text-decoration-none text-dark" %></span>
             </li>
-            <li class="nav-item mr-4">
-              <span><i class="fas fa-user"></i> <%= link_to 'マイページ', "", class: "text-decoration-none text-dark" %></span>
-            </li>
             <% if user_signed_in? %>
+              <li class="nav-item mr-4">
+                <span><i class="fas fa-user"></i> <%= link_to 'マイページ', user_path(current_user.id), class: "text-decoration-none text-dark" %></span>
+              </li>
               <li class="nav-item mr-4">
                 <span><i class="fas fa-sign-out-alt"></i> <%= link_to 'ログアウト', destroy_user_session_path, method: :delete, class: "text-decoration-none text-dark" %></span>
               </li>

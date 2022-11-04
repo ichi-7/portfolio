@@ -41,6 +41,7 @@ ActiveRecord::Schema.define(version: 2022_11_03_082557) do
   end
 
   create_table "posts", force: :cascade do |t|
+    t.integer "user_id"
     t.integer "spot_id"
     t.string "title"
     t.text "info"
@@ -64,6 +65,7 @@ ActiveRecord::Schema.define(version: 2022_11_03_082557) do
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
     t.string "name"
+    t.text "introduction"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["email"], name: "index_users_on_email", unique: true

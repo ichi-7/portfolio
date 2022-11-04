@@ -5,17 +5,14 @@
     </div>
   </div>
   <div class="row" style="height: 90%">
-    <div class="col-2 bg-white">
-    </div>
-    
-    <div class="col-10">
+    <div>
+      <div style="height: 80%" id='map'></div>
+      
       <!-- 地名入力用のinputを追加 -->
       <input id="address" type="text_field" value="東京駅">
       
       <!-- buttonをクリックしたらcodeAddressを実行　-->
       <input type="button" value="移動" onclick="codeAddress()">
-      <div style="height: 80%" id='map'></div>
-      
       <input id="lat" type="text_field" value="緯度">
       <input id="lng" type="text_field" value="経度">
       <input id="pos_address" type="text_field" value="住所">

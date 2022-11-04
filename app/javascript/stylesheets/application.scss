@@ -8,3 +8,14 @@
 h1.kiwi_kaku {
   font-weight: 900;
 }
+
+.card-list-container::before,
+.card-list-container::after {
+  content: "";
+  display: block;
+  width: calc(100% / 4);
+}
+
+.card-list-container::before {
+  order: 1;
+}

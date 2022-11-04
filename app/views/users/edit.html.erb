@@ -1,0 +1,24 @@
+<div class="container mt-5">
+  <div class="w-50 mx-auto">
+    <%= form_with model: @user, local: true do |f| %>
+      <h3>編集フォーム</h3>
+      <!-- ユーザ入力用テキストエリア -->
+      <div class="form-group border-top pt-3">
+        <%= f.label "プロフィール画像" %>
+        <%= f.file_field :image, accept: "image/*", class: "form-control-file" %>
+      </div>
+      <div class="form-group">
+        <%= f.label '名前' %>
+        <%= f.text_field :name, class: "form-control", style: "width: 94%" %>
+      </div>
+      <div class="form-group">
+        <%= f.label '紹介文' %>
+        <%= f.text_area :introduction, rows: "3", class: "form-control", style: "width: 94%" %>
+      </div>
+      <div class="text-left">
+        <%= f.submit "編集", class: "btn btn-outline-success mr-2", style: "width: 45%" %>
+        <%= link_to "戻る", users_path, class: "btn btn-outline-secondary ml-2", style: "width: 45%" %>
+      </div>
+    <% end %>
+  </div>
+</div>

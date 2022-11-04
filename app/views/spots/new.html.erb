@@ -67,9 +67,9 @@
       <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA32P06ny7qVMK9WbcLQjGktRTKNcAXDZI&callback=initMap" async defer></script>
     </div>
     
-    <div class="col-6 kiwi_kaku">
+    <div class="col-6">
       <div style="height: 80%; margin-top: 10%">
-        <%= form_with model: @spot do |f| %>
+        <%= form_with model: @spot, local: true do |f| %>
           <h3>投稿フォーム</h3>
           <!-- 情報検索・表示・入力用のテキストフィールド -->
           <div class="form-group border-top pt-2">
@@ -80,23 +80,25 @@
             </div>
           </div>
           <div class="form-group">
-            <%= f.hidden_field :position, class: "input-group-text form-control", id: "pos_address", value: "位置情報" %>
-            <%= f.hidden_field :lat, class: "input-group-text", id: "lat", value: "緯度" %>
-            <%= f.hidden_field :lng, class: "input-group-text", id: "lng", value: "経度" %>
+            <%= f.hidden_field :position, class: "input-group-text form-control", id: "pos_address" %>
+            <%= f.hidden_field :lat, class: "input-group-text", id: "lat" %>
+            <%= f.hidden_field :lng, class: "input-group-text", id: "lng" %>
           </div>
           <!-- ユーザ入力用テキストエリア -->
-          <div class="form-group">
-            <%= f.label "写真" %>
-            <%= f.file_field :image, accept: "image/*", class: "form-control-file" %>
-          </div>
-          <div class="form-group">
-            <%= f.label 'タイトル' %>
-            <%= f.text_field :title, class: "form-control", style: "width: 94%" %>
-          </div>
-          <div class="form-group">
-            <%= f.label 'スポット情報' %>
-            <%= f.text_area :info, rows: "3", class: "form-control", style: "width: 94%" %>
-          </div>
+          <%= f.fields_for @post do |i| %>
+            <div class="form-group">
+              <%= i.label "写真" %>
+              <%= i.file_field :image, accept: "image/*", class: "form-control-file" %>
+            </div>
+            <div class="form-group">
+              <%= i.label 'タイトル' %>
+              <%= i.text_field :title, class: "form-control", style: "width: 94%" %>
+            </div>
+            <div class="form-group">
+              <%= i.label 'スポット情報' %>
+              <%= i.text_area :info, rows: "3", class: "form-control", style: "width: 94%" %>
+            </div>
+          <% end %>
           <div class="text-left">
             <%= f.submit "投稿", class: "btn btn-outline-primary mr-2", style: "width: 45%" %>
             <%= link_to "マップに戻る", maps_path, class: "btn btn-outline-secondary ml-2", style: "width: 45%" %>
