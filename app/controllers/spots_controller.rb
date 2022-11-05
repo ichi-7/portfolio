@@ -1,5 +1,10 @@
 class SpotsController < ApplicationController
   
+  def show
+    @spot_name = Spot.find(params[:id]).name
+    @posts = Post.where(spot_id: params[:id]).order(id: "DESC").page(params[:page]).per(8)
+  end
+  
   def new
     @spot = Spot.new
     @post = Post.new
