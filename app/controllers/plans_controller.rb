@@ -6,4 +6,8 @@ class PlansController < ApplicationController
   def show
   end
   
+  def new
+    @plan = Plan.new
+  end
+  
 end

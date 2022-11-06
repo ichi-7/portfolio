@@ -13,5 +13,6 @@ Rails.application.routes.draw do
   resources :spots
   resources :posts
   resources :plans
+  resources :places
   
 end

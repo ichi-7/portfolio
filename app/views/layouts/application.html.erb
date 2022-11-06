@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <%= include_gon %>
     <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
-    <%= include_gon %>
     <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New&display=swap" rel="stylesheet">
   </head>
 
   <body class="d-flex flex-column vh-100" style="background-color: #f8fbf8;">
     <header class="" style="height: 10%; background-color: #d4dcda;">
-      <nav class="navbar navbar-expand-lg navbar-light h-100">
+      <nav class="navbar navbar-expand navbar-light h-100">
         <div class="container h-100 kiwi_kaku font-weight-bold">
           <%= link_to image_tag('logo', size: "50x50"), root_path %>
           <ul class="navbar-nav ml-auto"> 

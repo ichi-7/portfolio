@@ -1,0 +1,108 @@
+<div class="container" style="height: 90%">
+  <div class="row" style="height: 100%">
+    <div class="col-6">
+      <div class="" style="height: 80%; margin-top: 10%" id='map'></div>
+      
+      <script>
+        // codeAddressでも使用する為、mapを関数外で定義&geocoderも用意
+        let map
+        let geocoder
+        let marker = [];
+        let info_window = [];
+        let mark_pos = [];
+        let pos_address = [];
+        let i = 0;
+        
+        function initMap(){
+          // geocoder初期化
+          geocoder = new google.maps.Geocoder()
+          
+          // mapの初期位置設定(東京駅)
+          // lat：経度 lng：緯度
+          map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: 35.68136165284377, lng: 139.76705995711325},
+          // 地図の拡大率(大きいほど拡大 1〜21)
+          zoom: 7
+          });
+        }
+        
+        function codeAddress(){
+          // 入力を取得
+          let inputAddress = document.getElementById('address').value;
+        
+          // geocodingしたあとmapを移動
+          geocoder.geocode( { 'address': inputAddress}, function(results, status) {
+            if (status == 'OK') {
+              mark_pos[i] = results[0].geometry.location;
+              pos_address[i] = results[0].formatted_address.replace("日本、", "");
+        　　  
+        　　    // map.setCenterで上記の緯度経度に移動
+              map.setCenter(mark_pos[i]);
+        
+        　　  　// google.maps.MarkerでGoogleMap上の指定位置にマーカが立つ
+              marker[i] = new google.maps.Marker({
+                map: map,
+                position: mark_pos[i]
+              });
+              
+              // 吹き出しに表示する内容
+              info_window[i] = new google.maps.InfoWindow({
+                content: pos_address[i] + "<br>" + `<a href="https://www.google.com/maps/search/${pos_address[i]}" target="_blank" rel="noopener noreferrer">Googleマップで周辺情報を見る</a>`
+              });
+              
+              info_window[i].open(map,marker[i]);
+              
+              // クリックしたら吹き出しをマーカ上に出す(iがスコープ外?なのでkを定義)
+              let k = i;
+              marker[i].addListener('click', function(){
+                info_window[k].open(map,marker[k]);
+              });
+              
+              // text_fieldに情報を入れる(仮)
+              document.getElementById('lat').value = mark_pos[i].lat();
+              document.getElementById('lng').value = mark_pos[i].lng();
+              document.getElementById('pos_address').value = pos_address[i];
+              
+              i = i + 1;
+              
+            } else {
+              // エラー時の処理
+              alert('該当結果がありませんでした：' + status);
+            }
+          });
+        }
+      </script>
+      <script src="https://maps.googleapis.com/maps/api/js?key=<%= ENV['SECRET_KEY'] %>&callback=initMap" async defer></script>
+    </div>
+    
+    <div class="col-6">
+      <div style="height: 80%; margin-top: 10%">
+        <%= form_with model: @plan, local: true do |f| %>
+          <h3>旅行プラン① - ルート指定</h3>
+          <!-- 情報検索・表示・入力用のテキストフィールド -->
+          <div class="form-group border-top pt-2">
+            <%= f.label 'スポット名' %>
+            <div class="form-inline">
+              <%= f.text_field :name, class: "form-control mr-2", style: "width: 45%", id: "address", value: "東京駅" %>
+              <%= f.button "検索", class: "btn btn-outline-success ml-2", style: "width: 45%", type: 'button', onclick: "codeAddress()" %>
+            </div>
+          </div>
+          <!-- ピン情報 -->
+          <div class="form-group">
+            <%= f.text_field :position, class: "input-group-text form-control", style: "width: 45%", id: "pos_address" %>
+            <%= f.text_field :lat, class: "input-group-text", style: "width: 45%", id: "lat" %>
+            <%= f.text_field :lng, class: "input-group-text", style: "width: 45%", id: "lng" %>
+          </div>
+          <!-- 経由地リスト -->
+          <div class="map-route">
+            <ul id="route-list" class="form-control" style="width: 45%">test</ul>
+          </div>
+          <!-- 検索ボタン -->
+          <div class="map-search">
+            <%= button_tag "ルート検索", id: "btn-search", class: "btn btn-outline-primary", style: "width: 45%", onclick: "search()" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
