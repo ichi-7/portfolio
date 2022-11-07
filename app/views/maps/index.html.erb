@@ -6,16 +6,6 @@
   <div class="row" style="height: 82%">
     <div class="col-12 ">
       <div class="rounded" style="height: 100%;" id='map'></div>
-      
-      <!-- 地名入力用のinputを追加 -->
-      <!--<input id="address" type="text_field" value="東京駅">-->
-      
-      <!-- buttonをクリックしたらcodeAddressを実行　-->
-      <!--<input type="button" value="移動" onclick="codeAddress()">-->
-      <!--<input id="lat" type="text_field" value="緯度">-->
-      <!--<input id="lng" type="text_field" value="経度">-->
-      <!--<input id="pos_address" type="text_field" value="住所">-->
-      
       <script>
         // codeAddressでも使用する為、mapを関数外で定義&geocoderも用意
         let map
@@ -71,13 +61,6 @@
                 marker[i].addListener("click", function(){
                   info_window[i].open(map,marker[i]);
                 });
-                
-                
-                // text_fieldに情報を入れる
-                // document.getElementById('lat').value = mark_pos.lat();
-                // document.getElementById('lng').value = mark_pos.lng();
-                // document.getElementById('pos_address').value = pos_address;
-                
               } else {
                 // エラー時の処理
                 alert('該当結果がありませんでした：' + status);

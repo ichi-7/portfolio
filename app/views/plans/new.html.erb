@@ -7,12 +7,16 @@
         // codeAddressでも使用する為、mapを関数外で定義&geocoderも用意
         let map
         let geocoder
+        let i = 0;
         let marker = [];
         let info_window = [];
         let mark_pos = [];
         let pos_address = [];
-        let i = 0;
+        let pos_name = [];
+        let pos_lat = [];
+        let pos_lng = [];
         
+        // マップの初期状態をセット
         function initMap(){
           // geocoder初期化
           geocoder = new google.maps.Geocoder()
@@ -26,6 +30,97 @@
           });
         }
         
+        // 経由地リストへの追加
+        function addPlace(name, lat, lng, number){
+          var li = $('<li>', {
+            text: name[number],
+            "class": "list-group-item"
+          });
+          li.attr("data-lat", lat[number]); // data-latという属性にlat[number]を入れる
+          li.attr("data-lng", lng[number]); // data-lngという属性にlng[number]を入れる
+          $('#route-list').append(li);      // idがroute-listの要素の一番後ろにliを追加
+        }
+        
+        // ルートを検索
+        function search() {
+          var points = $('#route-list li');
+          
+          // hidden_fieldにスポット位置情報を入れる (データ保存用)
+          //document.getElementById('name').value = pos_name;
+          //document.getElementById('lat').value = pos_lat;
+          //document.getElementById('lng').value = pos_lng;
+        
+          // 2地点以上の場合
+          if (points.length >= 2){
+            var origin;          // 開始地点
+            var destination;     // 終了地点
+            var waypoints = [];  // 経由地点
+      
+            // origin, destination, waypointsを設定する
+            for (var i = 0; i < points.length; i++) {
+                points[i] = new google.maps.LatLng($(points[i]).attr("data-lat"), $(points[i]).attr("data-lng"));
+                if (i == 0){
+                  origin = points[i];
+                } else if (i == points.length-1){
+                  destination = points[i];
+                } else {
+                  waypoints.push({ location: points[i], stopover: true });
+                }
+            }
+            
+            // リクエストの作成
+            var request = {
+              origin:      origin,
+              destination: destination,
+              waypoints: waypoints,
+              travelMode:  google.maps.TravelMode.DRIVING // 運転ルートで検索
+            }
+            
+            // ルートサービスのリクエスト
+            new google.maps.DirectionsService().route(request, function(response, status) {
+              if (status == google.maps.DirectionsStatus.OK) {
+                new google.maps.DirectionsRenderer({
+                  map: map,
+                  suppressMarkers : true
+                }).setDirections(response);
+                
+                // 距離・時間を表示
+                var data = response.routes[0].legs;
+                var dist_sum = 0;
+                var time_sum = 0
+                for (var i = 0; i < data.length; i++) {
+                  // ルート検索したら道のり・時間を表示
+                  var info = $('<li>', {
+                    text: `${data[i].distance.text} - ${data[i].duration.text}`,
+                    "class": "list-group-item"
+                  });
+                  $('#route-info').append(info);  // idがroute-infoの要素の一番後ろに道のり情報を追加
+                  
+                  // 道のり・時間の合計値を取得
+                  dist_sum += Math.round(parseFloat(data[i].distance.text) * 10) / 10;
+                  time_sum += Math.round(parseFloat(data[i].duration.text) * 10) / 10;
+                  
+                  // 最後の繰り返し処理で行う事
+                  if (i == data.length - 1){
+                    info = $('<li>', {
+                      text: `合計：${dist_sum}km - ${time_sum}分`,
+                      "class": "list-group-item"
+                    });
+                    $('#route-info').append(info);  // idがroute-infoの要素の一番後ろに合計を追加
+                    
+                    info = $('<li>', {
+                      text: `-`,
+                      "class": "list-group-item"
+                    });
+                    $('#route-info').prepend(info);  // idがroute-infoの要素の一番前に空の情報を追加
+                  }
+                }
+              }
+            });
+          }
+        }
+        
+        // マップに情報を出す
         function codeAddress(){
           // 入力を取得
           let inputAddress = document.getElementById('address').value;
@@ -33,8 +128,12 @@
           // geocodingしたあとmapを移動
           geocoder.geocode( { 'address': inputAddress}, function(results, status) {
             if (status == 'OK') {
+              // 変数に情報を入れる
               mark_pos[i] = results[0].geometry.location;
               pos_address[i] = results[0].formatted_address.replace("日本、", "");
+              pos_name[i] = document.getElementById('address').value;
+              pos_lat[i] = mark_pos[i].lat();
+              pos_lng[i] = mark_pos[i].lng();
         　　  
         　　    // map.setCenterで上記の緯度経度に移動
               map.setCenter(mark_pos[i]);
@@ -45,23 +144,22 @@
                 position: mark_pos[i]
               });
               
-              // 吹き出しに表示する内容
+              // 吹き出しに表示する内容(ボタンで経由地に追加)
               info_window[i] = new google.maps.InfoWindow({
-                content: pos_address[i] + "<br>" + `<a href="https://www.google.com/maps/search/${pos_address[i]}" target="_blank" rel="noopener noreferrer">Googleマップで周辺情報を見る</a>`
+                content: pos_name[i] + "<br>" 
+                + pos_address[i] + "<br><br>" 
+                
+                + `<input class="btn btn-primary btn-sm" type="button" value="経由地に追加" onclick="addPlace(pos_name, pos_lat, pos_lng, ${i})">`
               });
               
+              // マーカー上に吹き出しが自動で出る
               info_window[i].open(map,marker[i]);
               
-              // クリックしたら吹き出しをマーカ上に出す(iがスコープ外?なのでkを定義)
+              // クリックしたら吹き出しをマーカ上に出す
               let k = i;
               marker[i].addListener('click', function(){
                 info_window[k].open(map,marker[k]);
               });
-              
-              // text_fieldに情報を入れる(仮)
-              document.getElementById('lat').value = mark_pos[i].lat();
-              document.getElementById('lng').value = mark_pos[i].lng();
-              document.getElementById('pos_address').value = pos_address[i];
               
               i = i + 1;
               
@@ -78,28 +176,46 @@
     <div class="col-6">
       <div style="height: 80%; margin-top: 10%">
         <%= form_with model: @plan, local: true do |f| %>
-          <h3>旅行プラン① - ルート指定</h3>
-          <!-- 情報検索・表示・入力用のテキストフィールド -->
-          <div class="form-group border-top pt-2">
+          <h3>旅行企画 Step① - ルート検索（車道）</h3>
+          <!-- スポット情報検索 -->
+          <div class="border-top pt-2">
             <%= f.label 'スポット名' %>
-            <div class="form-inline">
-              <%= f.text_field :name, class: "form-control mr-2", style: "width: 45%", id: "address", value: "東京駅" %>
-              <%= f.button "検索", class: "btn btn-outline-success ml-2", style: "width: 45%", type: 'button', onclick: "codeAddress()" %>
+          </div>
+          <div class="row form-group">
+            <div class="col-6">
+              <%= f.text_field :name, class: "form-control mr-2", id: "address", value: "東京駅" %>
+            </div>
+            <div class="col-6">
+              <%= f.button "検索", class: "btn btn-outline-success w-100 ml-2", type: 'button', onclick: "codeAddress()" %>
             </div>
           </div>
-          <!-- ピン情報 -->
+          <!-- スポット位置情報 -->
           <div class="form-group">
-            <%= f.text_field :position, class: "input-group-text form-control", style: "width: 45%", id: "pos_address" %>
-            <%= f.text_field :lat, class: "input-group-text", style: "width: 45%", id: "lat" %>
-            <%= f.text_field :lng, class: "input-group-text", style: "width: 45%", id: "lng" %>
+            <%= f.text_field :name, class: "input-group-text form-control", id: "name" %>
+            <%= f.text_field :lat, class: "input-group-text form-control", id: "lat" %>
+            <%= f.text_field :lng, class: "input-group-text form-control", id: "lng" %>
           </div>
-          <!-- 経由地リスト -->
-          <div class="map-route">
-            <ul id="route-list" class="form-control" style="width: 45%">test</ul>
+          <div class="row">
+            <!-- 経由地リスト -->
+            <div class="col-6">
+              <%= f.label '経由地リスト' %>
+              <ul id="route-list" class="list-group"></ul>
+            </div>
+            <!-- 道のり -->
+            <div class="col-6">
+              <%= f.label '道のり - 時間' %>
+              <ul id="route-info" class="list-group"></ul>
+            </div>
           </div>
-          <!-- 検索ボタン -->
-          <div class="map-search">
-            <%= button_tag "ルート検索", id: "btn-search", class: "btn btn-outline-primary", style: "width: 45%", onclick: "search()" %>
+          <div class="row">
+            <!-- 検索ボタン -->
+            <div class="col-6 map-search">
+              <%= f.button "ルート検索", id: "btn-search", class: "btn btn-outline-primary w-100 mt-3", type: 'button', onclick: "search()" %>
+            </div>
+            <!-- 削除ボタン -->
+            <div class="col-6">
+              <%= link_to "ルート削除", request.referer, class: "btn btn-outline-danger w-100 mt-3" %>
+            </div>
           </div>
         <% end %>
       </div>
