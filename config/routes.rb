@@ -12,6 +12,9 @@ Rails.application.routes.draw do
   resources :maps
   resources :spots
   resources :posts
+  get '/plans/route' => 'plans#route'
+  get '/plans/info' => 'plans#info'
+  get '/plans/confirm' => 'plans#confirm'
   resources :plans
   resources :places
   

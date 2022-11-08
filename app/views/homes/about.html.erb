@@ -23,16 +23,12 @@
           <span class="h2 font-weight-bold" style="color: #5c9291; letter-spacing: 0.12em;">リンク</span>
         </div>
         <div class="mb-3 d-flex justify-content-center">
-          <%= link_to "共有マップを見る", maps_path, class: "btn btn-outline-secondary mx-2", style: "width: 45%" %>
+          <%= link_to "共有マップを見る", maps_path, class: "btn btn-outline-info mx-2", style: "width: 45%" %>
+          <%= link_to "投稿一覧を見る", posts_path, class: "btn btn-outline-info mx-2", style: "width: 45%" %>
+        </div>
+        <div class="mb-3 d-flex justify-content-center">
           <%= link_to "情報を投稿する", new_spot_path, class: "btn btn-outline-secondary mx-2", style: "width: 45%" %>
-        </div>
-        <div class="mb-3 d-flex justify-content-center">
-          <%= link_to "ユーザーを見る", users_path, class: "btn btn-outline-secondary mx-2", style: "width: 45%" %>
-          <%= link_to "投稿一覧を見る", posts_path, class: "btn btn-outline-secondary mx-2", style: "width: 45%" %>
-        </div>
-        <div class="mb-3 d-flex justify-content-center">
-          <%= link_to "旅行を企画する", new_plan_path, class: "btn btn-outline-secondary mx-2", style: "width: 45%" %>
-          
+          <%= link_to "旅行を企画する", plans_route_path, class: "btn btn-outline-secondary mx-2", style: "width: 45%" %>
         </div>
       </div>
     </div>

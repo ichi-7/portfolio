@@ -47,15 +47,18 @@
           var points = $('#route-list li');
           var route_names = [];
           var route_lats = [];
+          var route_lngs = [];
           
           // hidden_fieldにスポット位置情報を入れる (データ保存用)
           for (var i = 0; i < points.length; i++) {
             route_names[i] = points[i].textContent;
             route_lats[i] = document.getElementById('route-list').children[i].getAttribute('data-lat');
+            route_lngs[i] = document.getElementById('route-list').children[i].getAttribute('data-lng');
             //document.getElementById('lng').value = pos_lng;
           }
           document.getElementById('name').value = route_names;
           document.getElementById('lat').value = route_lats;
+          document.getElementById('lng').value = route_lngs;
         
           // 2地点以上の場合
           if (points.length >= 2){
@@ -104,7 +107,11 @@
                   $('#route-info').append(info);  // idがroute-infoの要素の一番後ろに道のり情報を追加
                   
                   // 道のり・時間の合計値を取得
-                  dist_sum += Math.round(parseFloat(data[i].distance.text) * 10) / 10;
+                  if (data[i].distance.text.includes('km')){
+                    // `km`単位でなければ加算しない(距離が近いと`m`で検索結果が出る)
+                    dist_sum += Math.round(parseFloat(data[i].distance.text) * 10) / 10;
+                  }
+                  
                   time_sum += Math.round(parseFloat(data[i].duration.text) * 10) / 10;
                   
                   // 最後の繰り返し処理で行う事
@@ -182,8 +189,8 @@
     
     <div class="col-6">
       <div style="height: 80%; margin-top: 10%">
-        <%= form_with model: @plan, local: true do |f| %>
-          <h3>旅行企画 Step① - ルート検索（車道）</h3>
+        <%= form_with model: @plan, url: plans_info_path, method: :get, local: true do |f| %>
+          <h3>旅行企画 | Step① - ルート設定</h3>
           <!-- スポット情報検索 -->
           <div class="border-top pt-2">
             <%= f.label 'スポット名' %>
@@ -193,14 +200,14 @@
               <%= f.text_field :name, class: "form-control mr-2", id: "address", value: "東京駅" %>
             </div>
             <div class="col-6">
-              <%= f.button "検索", class: "btn btn-outline-success w-100 ml-2", type: 'button', onclick: "codeAddress()" %>
+              <%= f.button "スポット検索", class: "btn btn-outline-success w-100 ml-2", type: 'button', onclick: "codeAddress()" %>
             </div>
           </div>
           <!-- スポット位置情報 -->
           <div class="form-group">
-            <%= f.text_field :name, class: "input-group-text form-control", id: "name" %>
-            <%= f.text_field :lat, class: "input-group-text form-control", id: "lat" %>
-            <%= f.text_field :lng, class: "input-group-text form-control", id: "lng" %>
+            <%= f.hidden_field :name, class: "input-group-text form-control", id: "name" %>
+            <%= f.hidden_field :lat, class: "input-group-text form-control", id: "lat" %>
+            <%= f.hidden_field :lng, class: "input-group-text form-control", id: "lng" %>
           </div>
           <div class="row">
             <!-- 経由地リスト -->
@@ -217,7 +224,7 @@
           <div class="row">
             <!-- 検索ボタン -->
             <div class="col-6 map-search">
-              <%= f.button "ルート検索", id: "btn-search", class: "btn btn-outline-primary w-100 mt-3", type: 'button', onclick: "search()" %>
+              <%= f.button "ルート作成", id: "btn-search", class: "btn btn-outline-primary w-100 mt-3", type: 'button', onclick: "search()" %>
             </div>
             <!-- 削除ボタン -->
             <div class="col-6">
@@ -225,7 +232,7 @@
             </div>
           </div>
           <div class="row border-top mt-3 mb-5">
-            <%= link_to "Step② - 情報入力 に進む", "", class: "btn btn-outline-secondary w-100 mt-3" %>
+            <%= f.submit "Step② - 情報入力 に進む", class: "btn btn-outline-secondary w-100 mt-3" %>
           </div>
         <% end %>
       </div>

@@ -1,0 +1,40 @@
+<div class="container mt-3">
+  <h3>旅行企画 | Step② - 情報入力</h3>
+  <!-- スポット情報入力 -->
+  <%= form_with model: @plan, url: plans_confirm_path, method: :get, local: true do |f| %>
+  <div class="border-top pt-4">
+    <table class="table table-borderless rounded text-center" style="background:rgba(212,220,218,0.4);">
+      <tr>
+        <th style="vertical-align: middle;">企画名</th>
+        <td class="w-75"><%= f.text_field :plan_name, class: "form-control" %></td>
+      </tr>
+      <tr>
+        <th style="vertical-align: middle;">日にち</th>
+        <td class="w-75">
+          出発日：<%= f.date_select :start_day, {}, {class: 'form-control', style: 'display: inline-block; width: auto;'} %>
+          <span>　-　</span>
+          帰着日：<%= f.date_select :end_day, {}, {class: 'form-control', style: 'display: inline-block; width: auto;'} %>
+        </td>
+      </tr>
+      <tr>
+        <th style="vertical-align: middle;">集合場所</th>
+        <td class="w-75"><%= f.text_field :meeting_place, class: "form-control" %></td>
+      </tr>
+      <tr>
+        <th style="vertical-align: middle;">集合時間</th>
+        <td class="w-75"><%= f.time_select :meeting_time, {}, {class: 'form-control', style: 'display: inline-block; width: auto;'} %></td>
+      </tr>
+      <tr>
+        <th style="vertical-align: middle;">メモ</th>
+        <td class="w-75"><%= f.text_area :memo, rows: "4", class: "form-control" %></td>
+      </tr>
+    </table>
+    <%= f.hidden_field :spot_name, :value => params[:plan][:name] %>
+    <%= f.hidden_field :spot_lat, :value => params[:plan][:lat] %>
+    <%= f.hidden_field :spot_lng, :value => params[:plan][:lng] %>
+    <div class="d-flex justify-content-center border-top mt-4 mb-5">
+      <%= f.submit "Step③ - 確認画面 に進む", class: "btn btn-outline-secondary w-50 mt-3" %>
+    </div>  
+  </div>
+  <% end %>
+</div>

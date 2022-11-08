@@ -6,7 +6,15 @@ class PlansController < ApplicationController
   def show
   end
   
-  def new
+  def route
+    @plan = Plan.new
+  end
+  
+  def info
+    @plan = Plan.new
+  end
+  
+  def confirm
     @plan = Plan.new
   end
   
