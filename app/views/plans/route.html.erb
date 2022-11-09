@@ -1,13 +1,12 @@
 <div class="container" style="height: 90%">
   <div class="row" style="height: 100%">
     <div class="col-6">
-      <div class="" style="height: 80%; margin-top: 10%" id='map'></div>
+      <div style="height: 80%; margin-top: 10%" id='map'></div>
       
       <script>
         // codeAddressでも使用する為、mapを関数外で定義&geocoderも用意
         let map
         let geocoder
-        let i = 0;
         let marker = [];
         let info_window = [];
         let mark_pos = [];
@@ -135,6 +134,7 @@
         }
         
         // マップに情報を出す
+        let i = 0;
         function codeAddress(){
           // 入力を取得
           let inputAddress = document.getElementById('address').value;
