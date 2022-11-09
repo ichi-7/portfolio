@@ -2,11 +2,11 @@
 
 <div class="container mt-3">
   <h3>旅行企画 | Step③ - 入力情報の確認</h3>
-  <div class="row border-top pt-4 h-75">
-    <div class="col-7">
+  <div class="row border-top pt-4" style="height: 60%">
+    <div class="col-6">
       <div class="h-100 rounded" id='map'></div>
     </div>
-    <div class="col-5">
+    <div class="col-6">
       <div class="row">
         <!-- 経由地リスト -->
         <div class="col-6">
@@ -181,8 +181,12 @@
           // 距離・時間を表示
           var data = response.routes[0].legs;
           var dist_sum = 0;
-          var time_sum = 0
-          for (var i = 0; i < data.length; i++) {
+          var times = [];
+          var hour_sum = 0;
+          var minute_sum = 0;
+          var time_sum = 0;
+          
+          for (let i = 0; i < data.length; i++) {
             // ルート検索したら道のり・時間を表示
             var info = $('<li>', {
               text: `${data[i].distance.text} - ${data[i].duration.text}`,
@@ -190,18 +194,33 @@
             });
             $('#route-info').append(info);  // idがroute-infoの要素の一番後ろに道のり情報を追加
             
-            // 道のり・時間の合計値を取得
+            // 道のりの合計値を取得
             if (data[i].distance.text.includes('km')){
               // `km`単位でなければ加算しない(距離が近いと`m`で検索結果が出る)
               dist_sum += Math.round(parseFloat(data[i].distance.text) * 10) / 10;
             }
             
-            time_sum += Math.round(parseFloat(data[i].duration.text) * 10) / 10;
+            // 時間の合計値を取得
+            // 単位が`時間`か`分`かで計算を分ける
+            if (data[i].duration.text.includes('時間')){
+              times = data[i].duration.text.split('間');
+              hour_sum += Math.round(parseFloat(times[0]));
+              minute_sum += Math.round(parseFloat(times[1]));
+            } else {
+              minute_sum += Math.round(parseFloat(data[i].duration.text));
+            }
+            
+            if (minute_sum > 59){
+              hour_sum += Math.floor(minute_sum / 60);
+              minute_sum = minute_sum % 60;
+            }
+            
+            time_sum = `${hour_sum}時間${minute_sum}分`
             
             // 最後の繰り返し処理で行う事
             if (i == data.length - 1){
               info = $('<li>', {
-                text: `合計：${dist_sum}km - ${time_sum}分`,
+                text: `合計：${dist_sum}km - ${time_sum}`,
                 "class": "list-group-item"
               });
               $('#route-info').append(info);  // idがroute-infoの要素の一番後ろに合計を追加
