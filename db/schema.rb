@@ -42,7 +42,7 @@ ActiveRecord::Schema.define(version: 2022_11_06_020741) do
 
   create_table "places", force: :cascade do |t|
     t.integer "plan_id"
-    t.string "address"
+    t.string "name"
     t.float "lat"
     t.float "lng"
     t.datetime "created_at", precision: 6, null: false
@@ -51,8 +51,12 @@ ActiveRecord::Schema.define(version: 2022_11_06_020741) do
 
   create_table "plans", force: :cascade do |t|
     t.integer "user_id"
-    t.string "title"
-    t.text "body"
+    t.string "plan_name"
+    t.string "start_day"
+    t.string "end_day"
+    t.string "meeting_place"
+    t.string "meeting_time"
+    t.text "memo"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

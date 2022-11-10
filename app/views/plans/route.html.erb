@@ -130,12 +130,16 @@
                     minute_sum = minute_sum % 60;
                   }
                   
-                  time_sum = `${hour_sum}時間${minute_sum}分`
+                  if (hour_sum == 0){
+                    time_sum = `${minute_sum}分`
+                  } else {
+                    time_sum = `${hour_sum}時間 ${minute_sum}分`
+                  }
                   
                   // 最後の繰り返し処理で行う事
                   if (i == data.length - 1){
                     info = $('<li>', {
-                      text: `合計：${dist_sum}km - ${time_sum}`,
+                      text: `合計：${dist_sum} km - ${time_sum}`,
                       "class": "list-group-item"
                     });
                     $('#route-info').append(info);  // idがroute-infoの要素の一番後ろに合計を追加

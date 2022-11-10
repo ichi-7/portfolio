@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   get '/plans/route' => 'plans#route'
   get '/plans/info' => 'plans#info'
   get '/plans/confirm' => 'plans#confirm'
+  get '/plans/complete' => 'plans#complete'
   resources :plans
   resources :places
   
