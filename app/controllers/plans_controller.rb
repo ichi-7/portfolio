@@ -72,6 +72,12 @@ class PlansController < ApplicationController
     redirect_to plan_path(plan.id)  
   end
   
+  def destroy
+    plan = Plan.find(params[:id])
+    plan.destroy
+    redirect_to plans_path
+  end
+  
   def route
     @plan = Plan.new
     @place = Place.new
