@@ -1,80 +1,84 @@
-<div class="container" style="height: 90%">
-  <div class="d-flex align-items-center justify-content-between" style="height: 13%">
-    <h2 class="kiwi-kaku font-weight-bold border-bottom" style= "color: #5c9291; letter-spacing: 0.12em;"><i class="fas fa-map-marker-alt"></i> 共有マップ</h2>
-    <span class="font-weight-bold kiwi_kaku" style="background: linear-gradient(transparent 50%, #ffcc99 0%);">ピンをクリックすると情報が表示されます。</span>
+<div class="container h-100">
+  <div class="d-flex align-items-center justify-content-between border-bottom my-4">
+    <h2 class="kiwi-kaku font-weight-bold" style= "color: #5c9291; letter-spacing: 0.12em;"><i class="fas fa-map-marker-alt"></i> 共有マップ</h2>
+    <span class="font-weight-bold kiwi_kaku" style="background: linear-gradient(transparent 50%, #ffcc99 0%);">マップ上のピンをクリックすると情報が表示されます。</span>
   </div>
   <div class="row" style="height: 82%">
-    <div class="col-12 ">
+    <div class="col-12">
       <div class="rounded" style="height: 100%;" id='map'></div>
-      <script>
-        // codeAddressでも使用する為、mapを関数外で定義&geocoderも用意
-        let map
-        let geocoder
-        let marker = []; // マーカーの複数表示
-        let info_window = []; // 吹き出しの複数表示
-        const spots = gon.spots
-        let mark_pos
-        let pos_address
-        
-        function initMap(){
-          // geocoder初期化
-          geocoder = new google.maps.Geocoder()
-          
-          // mapの初期位置設定(東京駅)
-          // lat：経度 lng：緯度
-          map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: 35.68136165284377, lng: 139.76705995711325},
-          // 地図の拡大率(大きいほど拡大 1〜21)
-          zoom: 7
-          });
-        
-          // スポットの数(gon.spots)だけ繰り返し
-          for (let i = 0; i < spots.length; i++) {
-        
-            // geocodingしたあとmapを移動
-            geocoder.geocode( { 'address': spots[i].position}, function(results, status) {
-              if (status == 'OK') {
-                // 緯度・経度、住所を変数に入れる
-                mark_pos = results[0].geometry.location;
-                pos_address = results[0].formatted_address.replace("日本、", "");
-          　　  
-          　　    // map.setCenterでmark_posの緯度経度に移動
-                map.setCenter(mark_pos);
-          
-          　　  　// google.maps.MarkerでGoogleMap上の指定位置(mark_pos)にマーカが立つ
-                marker[i] = new google.maps.Marker({
-                  map: map,
-                  position: mark_pos
-                });
-                
-                let id = spots[i].id
-                
-                // 吹き出しに表示する内容
-                info_window[i] = new google.maps.InfoWindow({
-                  content: spots[i].name + "<br>" 
-                  + pos_address + "<br>" 
-                  + `<a href="/spots/${id}">投稿情報を見る</a>  | `
-                  + `<a href="https://www.google.com/maps/search/${pos_address}" target="_blank" rel="noopener noreferrer">周辺情報を見る</a>`
-                });
-                
-                // マーカーをクリックしたら吹き出しを出す
-                marker[i].addListener("click", function(){
-                  info_window[i].open(map,marker[i]);
-                });
-              } else {
-                // エラー時の処理
-                alert('該当結果がありませんでした：' + status);
-              }
-            });
-          }
-        }
-        
-        function codeAddress(){
-          // 入力を取得
-          let inputAddress = document.getElementById('address').value;
-        }
-      </script>
-      <script src="https://maps.googleapis.com/maps/api/js?key=<%= ENV['SECRET_KEY'] %>&callback=initMap" async defer></script>
     </div>
   </div>
+  <div class="d-flex justify-content-center border-top py-5 mt-4">
+    <span class="h5 font-weight-bold" style="color: #5c9291; color: #5c9291;"><i class="fas fa-map-marker-alt"></i> <%= link_to "情報を投稿する", new_spot_path, style: "color: #5c9291; color: #5c9291; letter-spacing: 0.12em" %></span>
+  </div>
 </div>
+
+<script>
+  // codeAddressでも使用する為、mapを関数外で定義&geocoderも用意
+  let map
+  let geocoder
+  let marker = []; // マーカーの複数表示
+  let info_window = []; // 吹き出しの複数表示
+  const spots = gon.spots
+  let mark_pos
+  let pos_address
+  
+  function initMap(){
+    // geocoder初期化
+    geocoder = new google.maps.Geocoder()
+    
+    // mapの初期位置設定(東京駅)
+    // lat：経度 lng：緯度
+    map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: 35.68136165284377, lng: 139.76705995711325},
+    // 地図の拡大率(大きいほど拡大 1〜21)
+    zoom: 7
+    });
+  
+    // スポットの数(gon.spots)だけ繰り返し
+    for (let i = 0; i < spots.length; i++) {
+  
+      // geocodingしたあとmapを移動
+      geocoder.geocode( { 'address': spots[i].position}, function(results, status) {
+        if (status == 'OK') {
+          // 緯度・経度、住所を変数に入れる
+          mark_pos = results[0].geometry.location;
+          pos_address = results[0].formatted_address.replace("日本、", "");
+    　　  
+    　　    // map.setCenterでmark_posの緯度経度に移動
+          map.setCenter(mark_pos);
+    
+    　　  　// google.maps.MarkerでGoogleMap上の指定位置(mark_pos)にマーカが立つ
+          marker[i] = new google.maps.Marker({
+            map: map,
+            position: mark_pos
+          });
+          
+          let id = spots[i].id
+          
+          // 吹き出しに表示する内容
+          info_window[i] = new google.maps.InfoWindow({
+            content: spots[i].name + "<br>" 
+            + pos_address + "<br>" 
+            + `<a href="/spots/${id}">投稿情報を見る</a>  | `
+            + `<a href="https://www.google.com/maps/search/${pos_address}" target="_blank" rel="noopener noreferrer">周辺情報を見る</a>`
+          });
+          
+          // マーカーをクリックしたら吹き出しを出す
+          marker[i].addListener("click", function(){
+            info_window[i].open(map,marker[i]);
+          });
+        } else {
+          // エラー時の処理
+          alert('該当結果がありませんでした：' + status);
+        }
+      });
+    }
+  }
+  
+  function codeAddress(){
+    // 入力を取得
+    let inputAddress = document.getElementById('address').value;
+  }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=<%= ENV['SECRET_KEY'] %>&callback=initMap" async defer></script>

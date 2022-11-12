@@ -16,7 +16,11 @@ Rails.application.routes.draw do
   get '/plans/info' => 'plans#info'
   get '/plans/confirm' => 'plans#confirm'
   get '/plans/complete' => 'plans#complete'
-  resources :plans
+  resources :plans do
+    get 'join' => 'plans#join'
+    get 'out' => 'plans#out'
+    resource :group_chats
+  end
   resources :places
   
 end

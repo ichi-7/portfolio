@@ -1,1 +1,40 @@
-<h2>企画一覧</h2>
+<div class="mx-auto mt-5 mb-4">
+  <h2 class="kiwi-kaku font-weight-bold" style= "color: #5c9291; letter-spacing: 0.12em;"><i class="fas fa-calendar"></i> 旅行一覧</h2>
+</div>
+
+<div class="card-list-container mx-auto d-flex flex-wrap border-top border-bottom pb-4 pt-4" style="width: 85%">
+  <% @plans.each do |plan| %>
+  <div class="card mx-auto mt-3 border-0" style="width: calc(100% / 4); background-color:rgba(0,0,0,0)">
+    <div class="card-body mx-auto">
+      <% if plan.end_day.before? Date.today %>
+        <span class="font-weight-bold text-danger">この旅行は終了しています。</span>
+      <% end %>
+      <div class="row d-flex justify-content-center">
+        <% if plan.image.attached? %>
+          <%= image_tag plan.image, class: "rounded mb-3", style: "max-width: 18vw; height: 18vw; object-fit: cover" %>
+        <% else %>
+          <%= image_tag 'noimage', class: "rounded mb-3", style: "max-width: 100%; height: 18vw; object-fit: cover" %>
+        <% end %>
+      </div>
+      <div class="row px-2">
+        <div class="w-100">
+          <span class="font-weight-bold"><%= plan.created_at.strftime("%Y.%m.%d") %></span> | 
+          <span class="font-weight-bold">参加中：<%= plan.plan_members.count %>名</span>
+          <div class="my-1">
+            <span class="h5 font-weight-bold"><%= link_to plan.plan_name, plan_path(plan), style: "color: #5c9291" %></span>
+          </div>
+          <div class="w-100">
+            <span><i class="far fa-user"></i> <%= link_to plan.user.name, user_path(plan.user.id) %></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% end %>
+</div>
+<div class="d-flex justify-content-center">
+  <%= paginate @plans %>
+</div>
+<div class="d-flex justify-content-center mb-4 py-5">
+  <span class="h5 font-weight-bold" style="color: #5c9291; color: #5c9291;"><i class="fas fa-calendar"></i> <%= link_to "旅行を企画する", plans_route_path, style: "color: #5c9291; color: #5c9291; letter-spacing: 0.12em" %></span>
+</div>

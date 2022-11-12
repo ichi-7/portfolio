@@ -32,7 +32,7 @@
         <th style="vertical-align: middle;">期間</th>
         <td class="w-75">
           出発日：<%= @start_day  %>
-          <span>　-　</span>
+          <span>　〜　</span>
           帰着日：<%= @end_day %>
         </td>
       </tr>
@@ -48,13 +48,17 @@
         <th style="vertical-align: middle;">メモ</th>
         <td class="w-75"><%= @memo %></td>
       </tr>
+      <tr>
+        <th style="vertical-align: middle;">企画サムネイル</th>
+        <td class="w-75"><%= f.file_field :image, accept: "image/*" %></td>
+      </tr>
     </table>
     
     <!-- 保存時に使用する情報 -->
     <%= f.hidden_field :user_id, :value => current_user.id %>
     <%= f.hidden_field :plan_name, :value => params[:plan][:plan_name] %>
-    <%= f.hidden_field :start_day, :value => @start_day %>
-    <%= f.hidden_field :end_day, :value => @end_day %>
+    <%= f.hidden_field :start_day, :value => @start_day.to_date %>
+    <%= f.hidden_field :end_day, :value => @end_day.to_date %>
     <%= f.hidden_field :meeting_place, :value => @meeting_place %>
     <%= f.hidden_field :meeting_time, :value => @meeting_time %>
     <%= f.hidden_field :memo, :value => @memo %>
