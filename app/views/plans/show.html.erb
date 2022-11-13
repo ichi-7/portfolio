@@ -12,11 +12,11 @@
       </div>
       <div class="d-flex align-items-center">
         <% if @plan.user_id == current_user.id %>
-          <%= link_to "企画を編集する", edit_plan_path(@plan.id), class: "w-100 btn btn-success" %>
+          <%= link_to "旅行を編集する", edit_plan_path(@plan.id), class: "w-100 btn btn-lg btn-outline-success" %>
         <% elsif @plan.member?(current_user) %>
-          <%= link_to "この旅行から抜ける", plan_out_path(@plan.id), class: "w-100 btn btn-danger" %>
+          <%= link_to "この旅行から抜ける", plan_out_path(@plan.id), class: "w-100 btn btn-lg btn-outline-danger" %>
         <% else %>
-          <%= link_to "この旅行に参加する", plan_join_path(@plan.id), class: "w-100 btn btn-primary" %>
+          <%= link_to "この旅行に参加する", plan_join_path(@plan.id), class: "w-100 btn btn-lg btn-outline-primary" %>
         <% end %>
       </div>
     </div>
@@ -30,15 +30,23 @@
         <% end %>
       </div>
         
-      <div class="col-9 mb-3">
-        <span class="bg-primary text-light">集合場所</span>
-        <div class="h5 py-1">
-          <span class="border-bottom border-primary pb-1">
-            <i class="fas fa-map-marker-alt"></i> <%= @meeting_place %>　
-            <i class="fas fa-clock"></i> <%= @meeting_time %>
-          </span> 
+      <div class="col-9">
+        <div class="form-inline">
+          <div class="rounded px-3 py-1 text-center" style="width:fit-content; background-color: #d4dcda;">
+            <span class="font-weight-bold">集合</span>
+            <div class="h5">
+              <span>
+                <i class="fas fa-map-marker-alt"></i> <%= @meeting_place %>　
+                <i class="fas fa-clock"></i> <%= @meeting_time %>
+              </span> 
+            </div>
+          </div>
+          <div class="ml-3">
+            <%= link_to "グループチャットを開く", plan_group_chats_path(params[:id]), class: "btn btn-outline-info" %>
+          </div>
         </div>
-        <div>
+        <div class="mt-2">
+          <span class="border-bottom">主催者からのメッセージ</span><br>
           <span style="line-height: 4"><%= @memo %></span>
         </div>
       </div>
@@ -65,16 +73,11 @@
     </div>
     
     <div class="mb-3 d-flex justify-content-end">
-      <% if @plan.user_id == current_user.id %>
-        <span class="mr-3"><i class="fas fa-edit"></i> <%= link_to "企画を編集する", edit_plan_path(@plan.id) %></span>
-        <span><i class="far fa-user"></i> <%= link_to @plan.user.name, user_path(@plan.user.id) %></span>
-      <% else %>
-        <span><i class="far fa-user"></i> <%= link_to @plan.user.name, user_path(@plan.user.id) %></span>
-      <% end %>
+      <span><i class="far fa-user"></i> <%= link_to @plan.user.name, user_path(@plan.user.id) %></span>
     </div>
     
     <div class="border-top py-5">
-      <span>主催者</span>
+      <span>参加者</span>
       <div class="form-inline">
         <% @members.each do |member| %>
           <div class="text-center mr-2" style="width:fit-content">

@@ -1,1 +1,55 @@
-<%= params %>
+<div class="container">
+  <div class="mx-auto mt-4">
+    <h2 class="kiwi-kaku font-weight-bold text-center" style= "color: #5c9291; letter-spacing: 0.12em;">
+      <i class="fas fa-calendar"></i> <%= @plan.plan_name %>
+    </h2>
+  </div>
+  <div class="mx-auto w-75">
+    <div class="my-3 border-top border-bottom" style="overflow: scroll; height: 50vh;">
+      <% @chats.each do |chat| %>
+        <% if chat.user == current_user %>
+          <div class="d-flex justify-content-end my-2 mr-4">
+            <div class="form-inline">
+              <div>
+                <span class="align-bottom" style="font-size: 0.7rem"><%= chat.created_at.strftime("%-m/%-d %-H:%M") %></span>
+              </div>
+              <div class="ml-2 mr-1 py-1 px-4 rounded" style="background-color: #badcad;">
+                <span><%= chat.message %></span>
+              </div>
+            </div>
+          </div>
+        <% else %>
+          <div class="my-2 ml-4">
+            <span style="font-size: 0.7rem"><%= chat.user.name %></span>
+            <div class="form-inline d-flex align-items-center">
+              <div class="h-100 ">
+                <% if chat.user.image.attached? %>
+                  <%= image_tag chat.user.image, class: "rounded-circle", style: "max-width: 18vw; height: 3vw; object-fit: cover" %>
+                <% else %>
+                  <%= image_tag 'noimage', class: "rounded-circle", style: "max-width: 100%; height: 3vw; object-fit: cover" %>
+                <% end %>
+              </div>
+              <div class="ml-2 mr-1 py-1 px-4 rounded" style="max-width: 70%; background-color: #d4dcda;">
+                <span><%= chat.message %></span>
+              </div>
+              <div>
+                <span class="align-bottom" style="font-size: 0.7rem"><%= chat.created_at.strftime("%-m/%-d %-H:%M") %></span>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+    <div>
+      <%= form_with url: plan_group_chats_path(params[:plan_id]), local: true do |f| %>
+      <div class="w-75 mx-auto form-group">
+        <%= f.label 'メッセージを送る' %>
+        <%= f.text_area :message, class: "form-control mb-2" %>
+        <div class="text-center">
+          <%= f.submit "送信", class: "btn btn-outline-primary w-25" %>
+        </div>
+      </div>
+      <% end %>
+    </div>
+  </div>
+</div>
