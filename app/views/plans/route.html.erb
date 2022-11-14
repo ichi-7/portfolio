@@ -2,225 +2,20 @@
   <div class="row" style="height: 100%">
     <div class="col-6">
       <div style="height: 80%; margin-top: 10%" id='map'></div>
-      
-      <script>
-        // codeAddressでも使用する為、mapを関数外で定義&geocoderも用意
-        let map
-        let geocoder
-        let marker = [];
-        let info_window = [];
-        let mark_pos = [];
-        let pos_address = [];
-        let pos_name = [];
-        let pos_lat = [];
-        let pos_lng = [];
-        
-        // マップの初期状態をセット
-        function initMap(){
-          // geocoder初期化
-          geocoder = new google.maps.Geocoder()
-          
-          // mapの初期位置設定(東京駅)
-          // lat：経度 lng：緯度
-          map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: 35.68136165284377, lng: 139.76705995711325},
-          // 地図の拡大率(大きいほど拡大 1〜21)
-          zoom: 7
-          });
-        }
-        
-        // 経由地リストへの追加
-        function addPlace(name, lat, lng, number){
-          var li = $('<li>', {
-            text: name[number],
-            "class": "list-group-item",
-            "id": "route-item"
-          });
-          li.attr("data-lat", lat[number]); // data-latという属性にlat[number]を入れる
-          li.attr("data-lng", lng[number]); // data-lngという属性にlng[number]を入れる
-          $('#route-list').append(li);      // idがroute-listの要素の一番後ろにliを追加
-        }
-        
-        // ルートを検索・経由地データ保存
-        function search() {
-          var points = $('#route-list li');
-          var route_names = [];
-          var route_lats = [];
-          var route_lngs = [];
-          
-          // hidden_fieldにスポット位置情報を入れる (データ保存用)
-          for (var i = 0; i < points.length; i++) {
-            route_names[i] = points[i].textContent;
-            route_lats[i] = document.getElementById('route-list').children[i].getAttribute('data-lat');
-            route_lngs[i] = document.getElementById('route-list').children[i].getAttribute('data-lng');
-            //document.getElementById('lng').value = pos_lng;
-          }
-          document.getElementById('name').value = route_names;
-          document.getElementById('lat').value = route_lats;
-          document.getElementById('lng').value = route_lngs;
-        
-          // 2地点以上の場合
-          if (points.length >= 2){
-            var origin;          // 開始地点
-            var destination;     // 終了地点
-            var waypoints = [];  // 経由地点
-      
-            // origin, destination, waypointsを設定する
-            for (var i = 0; i < points.length; i++) {
-                points[i] = new google.maps.LatLng($(points[i]).attr("data-lat"), $(points[i]).attr("data-lng"));
-                if (i == 0){
-                  origin = points[i];
-                } else if (i == points.length-1){
-                  destination = points[i];
-                } else {
-                  waypoints.push({ location: points[i], stopover: true });
-                }
-            }
-            
-            // リクエストの作成
-            var request = {
-              origin:      origin,
-              destination: destination,
-              waypoints: waypoints,
-              travelMode:  google.maps.TravelMode.DRIVING // 運転ルートで検索
-            }
-            
-            // ルートサービスのリクエスト
-            new google.maps.DirectionsService().route(request, function(response, status) {
-              if (status == google.maps.DirectionsStatus.OK) {
-                new google.maps.DirectionsRenderer({
-                  map: map,
-                  suppressMarkers : true
-                }).setDirections(response);
-                
-                // 距離・時間を表示
-                var data = response.routes[0].legs;
-                var dist_sum = 0;
-                var times = [];
-                var hour_sum = 0;
-                var minute_sum = 0;
-                var time_sum = 0
-                
-                for (var i = 0; i < data.length; i++) {
-                  // ルート検索したら道のり・時間を表示
-                  var info = $('<li>', {
-                    text: `${data[i].distance.text} - ${data[i].duration.text}`,
-                    "class": "list-group-item"
-                  });
-                  $('#route-info').append(info);  // idがroute-infoの要素の一番後ろに道のり情報を追加
-                  
-                  // 道のりの合計値を取得
-                  if (data[i].distance.text.includes('km')){
-                    // `km`単位でなければ加算しない(距離が近いと`m`で検索結果が出る)
-                    dist_sum += Math.round(parseFloat(data[i].distance.text) * 10) / 10;
-                  }
-                  
-                  // 時間の合計値を取得
-                  // 単位が`時間`か`分`かで計算を分ける
-                  if (data[i].duration.text.includes('時間')){
-                    times = data[i].duration.text.split('間');
-                    hour_sum += Math.round(parseFloat(times[0]));
-                    minute_sum += Math.round(parseFloat(times[1]));
-                  } else {
-                    minute_sum += Math.round(parseFloat(data[i].duration.text));
-                  }
-                  
-                  if (minute_sum > 59){
-                    hour_sum += Math.floor(minute_sum / 60);
-                    minute_sum = minute_sum % 60;
-                  }
-                  
-                  if (hour_sum == 0){
-                    time_sum = `${minute_sum}分`
-                  } else {
-                    time_sum = `${hour_sum}時間 ${minute_sum}分`
-                  }
-                  
-                  // 最後の繰り返し処理で行う事
-                  if (i == data.length - 1){
-                    info = $('<li>', {
-                      text: `合計：${dist_sum} km - ${time_sum}`,
-                      "class": "list-group-item"
-                    });
-                    $('#route-info').append(info);  // idがroute-infoの要素の一番後ろに合計を追加
-                    
-                    info = $('<li>', {
-                      text: `-`,
-                      "class": "list-group-item"
-                    });
-                    $('#route-info').prepend(info);  // idがroute-infoの要素の一番前に空の情報を追加
-                  }
-                }
-              }
-            });
-          }
-        }
-        
-        // マップに情報を出す
-        let i = 0;
-        function codeAddress(){
-          // 入力を取得
-          let inputAddress = document.getElementById('address').value;
-        
-          // geocodingしたあとmapを移動
-          geocoder.geocode( { 'address': inputAddress}, function(results, status) {
-            if (status == 'OK') {
-              // 変数に情報を入れる
-              mark_pos[i] = results[0].geometry.location;
-              pos_address[i] = results[0].formatted_address.replace("日本、", "");
-              pos_name[i] = document.getElementById('address').value;
-              pos_lat[i] = mark_pos[i].lat();
-              pos_lng[i] = mark_pos[i].lng();
-        　　  
-        　　    // map.setCenterで上記の緯度経度に移動
-              map.setCenter(mark_pos[i]);
-        
-        　　  　// google.maps.MarkerでGoogleMap上の指定位置にマーカが立つ
-              marker[i] = new google.maps.Marker({
-                map: map,
-                position: mark_pos[i]
-              });
-              
-              // 吹き出しに表示する内容(ボタンで経由地に追加)
-              info_window[i] = new google.maps.InfoWindow({
-                content: pos_name[i] + "<br>" 
-                + pos_address[i] + "<br><br>" 
-                
-                + `<input class="btn btn-primary btn-sm" type="button" value="経由地に追加" onclick="addPlace(pos_name, pos_lat, pos_lng, ${i})">`
-              });
-              
-              // マーカー上に吹き出しが自動で出る
-              info_window[i].open(map,marker[i]);
-              
-              // クリックしたら吹き出しをマーカ上に出す
-              let k = i;
-              marker[i].addListener('click', function(){
-                info_window[k].open(map,marker[k]);
-              });
-              
-              i = i + 1;
-              
-            } else {
-              // エラー時の処理
-              alert('該当結果がありませんでした：' + status);
-            }
-          });
-        }
-      </script>
-      <script src="https://maps.googleapis.com/maps/api/js?key=<%= ENV['SECRET_KEY'] %>&callback=initMap" async defer></script>
     </div>
     
     <div class="col-6">
       <div style="height: 80%; margin-top: 10%">
         <%= form_with model: @plan, url: plans_info_path, method: :get, local: true do |f| %>
           <h3>旅行企画 | Step① - ルート設定</h3>
+          <span style="color: tomato"><%= alert %></span>
           <!-- スポット情報検索 -->
           <div class="border-top pt-2">
             <%= f.label 'スポット名' %>
           </div>
           <div class="row form-group">
             <div class="col-6">
-              <%= f.text_field :name, class: "form-control mr-2", id: "address", value: "東京駅" %>
+              <%= f.text_field :name, :placeholder => "例. 東京駅", class: "form-control mr-2", id: "address" %>
             </div>
             <div class="col-6">
               <%= f.button "スポット検索", class: "btn btn-outline-success w-100 ml-2", type: 'button', onclick: "codeAddress()" %>
@@ -231,16 +26,17 @@
             <%= f.hidden_field :name, class: "input-group-text form-control", id: "name" %>
             <%= f.hidden_field :lat, class: "input-group-text form-control", id: "lat" %>
             <%= f.hidden_field :lng, class: "input-group-text form-control", id: "lng" %>
+            <%= f.hidden_field :time, class: "input-group-text form-control", id: "time" %>
           </div>
           <div class="row">
             <!-- 経由地リスト -->
             <div class="col-6">
-              <%= f.label '経由地リスト' %>
+              <%= f.label '経由地リスト' %> <span style="color: tomato">*</span>
               <ul id="route-list" class="list-group"></ul>
             </div>
             <!-- 道のり -->
             <div class="col-6">
-              <%= f.label '道のり - 時間' %>
+              <%= f.label '道のり - 時間' %> <span style="color: tomato">*</span>
               <ul id="route-info" class="list-group"></ul>
             </div>
           </div>
@@ -262,3 +58,211 @@
     </div>
   </div>
 </div>
+
+<script>
+  // codeAddressでも使用する為、mapを関数外で定義&geocoderも用意
+  let map
+  let geocoder
+  let marker = [];
+  let info_window = [];
+  let mark_pos = [];
+  let pos_address = [];
+  let pos_name = [];
+  let pos_lat = [];
+  let pos_lng = [];
+  
+  // マップの初期状態をセット
+  function initMap(){
+    // geocoder初期化
+    geocoder = new google.maps.Geocoder()
+    
+    // mapの初期位置設定(東京駅)
+    // lat：経度 lng：緯度
+    map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: 35.68136165284377, lng: 139.76705995711325},
+    // 地図の拡大率(大きいほど拡大 1〜21)
+    zoom: 8
+    });
+  }
+  
+  // 経由地リストへの追加
+  function addPlace(name, lat, lng, number){
+    var li = $('<li>', {
+      text: name[number],
+      "class": "list-group-item",
+      "id": "route-item"
+    });
+    li.attr("data-lat", lat[number]); // data-latという属性にlat[number]を入れる
+    li.attr("data-lng", lng[number]); // data-lngという属性にlng[number]を入れる
+    $('#route-list').append(li);      // idがroute-listの要素の一番後ろにliを追加
+  }
+  
+  // ルートを検索・経由地データ保存
+  function search() {
+    var points = $('#route-list li');
+    var route_names = [];
+    var route_lats = [];
+    var route_lngs = [];
+    
+    // hidden_fieldにスポット位置情報を入れる (データ保存用)
+    for (var i = 0; i < points.length; i++) {
+      route_names[i] = points[i].textContent;
+      route_lats[i] = document.getElementById('route-list').children[i].getAttribute('data-lat');
+      route_lngs[i] = document.getElementById('route-list').children[i].getAttribute('data-lng');
+      //document.getElementById('lng').value = pos_lng;
+    }
+    document.getElementById('name').value = route_names;
+    document.getElementById('lat').value = route_lats;
+    document.getElementById('lng').value = route_lngs;
+  
+    // 2地点以上の場合
+    if (points.length >= 2){
+      var origin;          // 開始地点
+      var destination;     // 終了地点
+      var waypoints = [];  // 経由地点
+
+      // origin, destination, waypointsを設定する
+      for (var i = 0; i < points.length; i++) {
+          points[i] = new google.maps.LatLng($(points[i]).attr("data-lat"), $(points[i]).attr("data-lng"));
+          if (i == 0){
+            origin = points[i];
+          } else if (i == points.length-1){
+            destination = points[i];
+          } else {
+            waypoints.push({ location: points[i], stopover: true });
+          }
+      }
+      
+      // リクエストの作成
+      var request = {
+        origin:      origin,
+        destination: destination,
+        waypoints: waypoints,
+        travelMode:  google.maps.TravelMode.DRIVING // 運転ルートで検索
+      }
+      
+      // ルートサービスのリクエスト
+      new google.maps.DirectionsService().route(request, function(response, status) {
+        if (status == google.maps.DirectionsStatus.OK) {
+          new google.maps.DirectionsRenderer({
+            map: map,
+            suppressMarkers : true
+          }).setDirections(response);
+          
+          // 距離・時間を表示
+          var data = response.routes[0].legs;
+          var dist_sum = 0;
+          var times = [];
+          var hour_sum = 0;
+          var minute_sum = 0;
+          var time_sum = 0
+          
+          for (var i = 0; i < data.length; i++) {
+            // ルート検索したら道のり・時間を表示
+            var info = $('<li>', {
+              text: `${data[i].distance.text} - ${data[i].duration.text}`,
+              "class": "list-group-item"
+            });
+            $('#route-info').append(info);  // idがroute-infoの要素の一番後ろに道のり情報を追加
+            
+            // 道のりの合計値を取得
+            if (data[i].distance.text.includes('km')){
+              // `km`単位でなければ加算しない(距離が近いと`m`で検索結果が出る)
+              dist_sum += Math.round(parseFloat(data[i].distance.text) * 10) / 10;
+            }
+            
+            // 時間の合計値を取得
+            // 単位が`時間`か`分`かで計算を分ける
+            if (data[i].duration.text.includes('時間')){
+              times = data[i].duration.text.split('間');
+              hour_sum += Math.round(parseFloat(times[0]));
+              minute_sum += Math.round(parseFloat(times[1]));
+            } else {
+              minute_sum += Math.round(parseFloat(data[i].duration.text));
+            }
+            
+            if (minute_sum > 59){
+              hour_sum += Math.floor(minute_sum / 60);
+              minute_sum = minute_sum % 60;
+            }
+            
+            if (hour_sum == 0){
+              time_sum = `${minute_sum}分`
+            } else {
+              time_sum = `${hour_sum}時間 ${minute_sum}分`
+            }
+            
+            // 最後の繰り返し処理で行う事
+            if (i == data.length - 1){
+              info = $('<li>', {
+                text: `合計：${dist_sum} km - ${time_sum}`,
+                "class": "list-group-item"
+              });
+              $('#route-info').append(info);  // idがroute-infoの要素の一番後ろに合計を追加
+              
+              info = $('<li>', {
+                text: `-`,
+                "class": "list-group-item"
+              });
+              $('#route-info').prepend(info);  // idがroute-infoの要素の一番前に空の情報を追加
+              
+              document.getElementById('time').value = time_sum;
+            }
+          }
+        }
+      });
+    }
+  }
+  
+  // マップに情報を出す
+  let i = 0;
+  function codeAddress(){
+    // 入力を取得
+    let inputAddress = document.getElementById('address').value;
+  
+    // geocodingしたあとmapを移動
+    geocoder.geocode( { 'address': inputAddress}, function(results, status) {
+      if (status == 'OK') {
+        // 変数に情報を入れる
+        mark_pos[i] = results[0].geometry.location;
+        pos_address[i] = results[0].formatted_address.replace("日本、", "");
+        pos_name[i] = document.getElementById('address').value;
+        pos_lat[i] = mark_pos[i].lat();
+        pos_lng[i] = mark_pos[i].lng();
+  　　  
+  　　    // map.setCenterで上記の緯度経度に移動
+        map.setCenter(mark_pos[i]);
+  
+  　　  　// google.maps.MarkerでGoogleMap上の指定位置にマーカが立つ
+        marker[i] = new google.maps.Marker({
+          map: map,
+          position: mark_pos[i]
+        });
+        
+        // 吹き出しに表示する内容(ボタンで経由地に追加)
+        info_window[i] = new google.maps.InfoWindow({
+          content: pos_name[i] + "<br>" 
+          + pos_address[i] + "<br><br>" 
+          
+          + `<input class="btn btn-primary btn-sm" type="button" value="経由地に追加" onclick="addPlace(pos_name, pos_lat, pos_lng, ${i})">`
+        });
+        
+        // マーカー上に吹き出しが自動で出る
+        info_window[i].open(map,marker[i]);
+        
+        // クリックしたら吹き出しをマーカ上に出す
+        let k = i;
+        marker[i].addListener('click', function(){
+          info_window[k].open(map,marker[k]);
+        });
+        
+        i = i + 1;
+        
+      } else {
+        // エラー時の処理
+        alert('該当結果がありませんでした：' + status);
+      }
+    });
+  }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=<%= ENV['SECRET_KEY'] %>&callback=initMap" async defer></script>

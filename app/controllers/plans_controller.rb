@@ -81,10 +81,13 @@ class PlansController < ApplicationController
   def route
     @plan = Plan.new
     @place = Place.new
-    
   end
   
   def info
+    # ルート情報がない場合はリダイレクト
+    if params[:plan][:time] == "" then
+      redirect_to plans_route_path, alert: '※ ルートが指定されていません'
+    end
     @plan = Plan.new
   end
   

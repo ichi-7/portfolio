@@ -2,82 +2,17 @@
   <div class="row" style="height: 100%">
     <div class="col-6">
       <div class="" style="height: 80%; margin-top: 10%" id='map'></div>
-      
-      <script>
-        // codeAddressでも使用する為、mapを関数外で定義&geocoderも用意
-        let map
-        let geocoder
-        let mark_pos
-        let pos_address
-        let marker
-        let info_window
-        
-        function initMap(){
-          // geocoder初期化
-          geocoder = new google.maps.Geocoder()
-          
-          // mapの初期位置設定(東京駅)
-          // lat：経度 lng：緯度
-          map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: 35.68136165284377, lng: 139.76705995711325},
-          // 地図の拡大率(大きいほど拡大 1〜21)
-          zoom: 12
-          });
-        }
-        
-        function codeAddress(){
-          // 入力を取得
-          let inputAddress = document.getElementById('address').value;
-        
-          // geocodingしたあとmapを移動
-          geocoder.geocode( { 'address': inputAddress}, function(results, status) {
-            if (status == 'OK') {
-              mark_pos = results[0].geometry.location;
-              pos_address = results[0].formatted_address.replace("日本、", "");
-        　　  
-        　　    // map.setCenterで上記の緯度経度に移動
-              map.setCenter(mark_pos);
-        
-        　　  　// google.maps.MarkerでGoogleMap上の指定位置にマーカが立つ
-              marker = new google.maps.Marker({
-                map: map,
-                position: mark_pos
-              });
-              
-              // 吹き出しに表示する内容
-              info_window = new google.maps.InfoWindow({
-                content: inputAddress + "<br>" 
-                + pos_address + "<br>" 
-                + `<a href="https://www.google.com/maps/search/${pos_address}" target="_blank" rel="noopener noreferrer">周辺情報を見る</a>`
-              });
-              
-              // 吹き出しをマーカ上に出す
-              info_window.open(map,marker)
-              
-              // text_fieldに情報を入れる
-              document.getElementById('lat').value = mark_pos.lat();
-              document.getElementById('lng').value = mark_pos.lng();
-              document.getElementById('pos_address').value = pos_address;
-              
-            } else {
-              // エラー時の処理
-              alert('該当結果がありませんでした：' + status);
-            }
-          });
-        }
-      </script>
-      <script src="https://maps.googleapis.com/maps/api/js?key=<%= ENV['SECRET_KEY'] %>&callback=initMap" async defer></script>
     </div>
     
     <div class="col-6">
       <div style="height: 80%; margin-top: 10%">
         <%= form_with model: @spot, local: true do |f| %>
-          <h3>投稿フォーム</h3>
+          <span class="h3">投稿フォーム</span> <span style="color: tomato"><%= alert %></span>
           <!-- 情報検索・表示・入力用のテキストフィールド -->
-          <div class="form-group border-top pt-2">
-            <%= f.label 'スポット名' %>
+          <div class="form-group border-top mt-2 pt-2">
+            <%= f.label 'スポット（ピンで指定）' %> <%= f.label '*', style: "color: tomato" %>
             <div class="form-inline">
-              <%= f.text_field :name, class: "form-control mr-2", style: "width: 45%", id: "address", value: "東京駅" %>
+              <%= f.text_field :name, :placeholder => "例. 東京駅", class: "form-control mr-2", style: "width: 45%", id: "address" %>
               <%= f.button "検索", class: "btn btn-outline-success ml-2", style: "width: 45%", type: 'button', onclick: "codeAddress()" %>
             </div>
           </div>
@@ -93,12 +28,12 @@
               <%= i.file_field :image, accept: "image/*", class: "form-control-file" %>
             </div>
             <div class="form-group">
-              <%= i.label 'タイトル' %>
-              <%= i.text_field :title, class: "form-control", style: "width: 94%" %>
+              <%= i.label 'タイトル' %> <%= i.label '*', style: "color: tomato" %>
+              <%= i.text_field :title, required: true, class: "form-control", style: "width: 94%" %>
             </div>
             <div class="form-group">
-              <%= i.label 'スポット情報' %>
-              <%= i.text_area :info, rows: "3", class: "form-control", style: "width: 94%" %>
+              <%= i.label 'スポット情報' %> <%= i.label '*', style: "color: tomato" %>
+              <%= i.text_area :info, required: true, rows: "3", class: "form-control", style: "width: 94%" %>
             </div>
           <% end %>
           <div class="text-left">
@@ -110,3 +45,68 @@
     </div>
   </div>
 </div>
+
+<script>
+  // codeAddressでも使用する為、mapを関数外で定義&geocoderも用意
+  let map
+  let geocoder
+  let mark_pos
+  let pos_address
+  let marker
+  let info_window
+  
+  function initMap(){
+    // geocoder初期化
+    geocoder = new google.maps.Geocoder()
+    
+    // mapの初期位置設定(東京駅)
+    // lat：経度 lng：緯度
+    map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: 35.68136165284377, lng: 139.76705995711325},
+    // 地図の拡大率(大きいほど拡大 1〜21)
+    zoom: 12
+    });
+  }
+  
+  function codeAddress(){
+    // 入力を取得
+    let inputAddress = document.getElementById('address').value;
+  
+    // geocodingしたあとmapを移動
+    geocoder.geocode( { 'address': inputAddress}, function(results, status) {
+      if (status == 'OK') {
+        mark_pos = results[0].geometry.location;
+        pos_address = results[0].formatted_address.replace("日本、", "");
+  　　  
+  　　    // map.setCenterで上記の緯度経度に移動
+        map.setCenter(mark_pos);
+  
+  　　  　// google.maps.MarkerでGoogleMap上の指定位置にマーカが立つ
+        marker = new google.maps.Marker({
+          map: map,
+          position: mark_pos
+        });
+        
+        // 吹き出しに表示する内容
+        info_window = new google.maps.InfoWindow({
+          content: inputAddress + "<br>" 
+          + pos_address + "<br>" 
+          + `<a href="https://www.google.com/maps/search/${pos_address}" target="_blank" rel="noopener noreferrer">周辺情報を見る</a>`
+        });
+        
+        // 吹き出しをマーカ上に出す
+        info_window.open(map,marker)
+        
+        // text_fieldに情報を入れる
+        document.getElementById('lat').value = mark_pos.lat();
+        document.getElementById('lng').value = mark_pos.lng();
+        document.getElementById('pos_address').value = pos_address;
+        
+      } else {
+        // エラー時の処理
+        alert('該当結果がありませんでした：' + status);
+      }
+    });
+  }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=<%= ENV['SECRET_KEY'] %>&callback=initMap" async defer></script>

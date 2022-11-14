@@ -43,7 +43,7 @@
     <div>
       <%= form_with url: plan_group_chats_path(params[:plan_id]), local: true do |f| %>
       <div class="w-75 mx-auto form-group">
-        <%= f.label 'メッセージを送る' %>
+        <%= f.label 'メッセージを入力' %>
         <%= f.text_area :message, class: "form-control mb-2" %>
         <div class="text-center">
           <%= f.submit "送信", class: "btn btn-outline-primary w-25" %>

@@ -5,11 +5,11 @@
   <div class="border-top pt-4">
     <table class="table table-borderless rounded text-center" style="background:rgba(212,220,218,0.4);">
       <tr>
-        <th style="vertical-align: middle;">企画名</th>
-        <td class="w-75"><%= f.text_field :plan_name, class: "form-control" %></td>
+        <th style="vertical-align: middle;">企画名 <span style="color: tomato">*</span></th>
+        <td class="w-75"><%= f.text_field :plan_name, required: true, class: "form-control" %></td>
       </tr>
       <tr>
-        <th style="vertical-align: middle;">期間</th>
+        <th style="vertical-align: middle;">期間 <span style="color: tomato">*</span></th>
         <td class="w-75">
           出発日：<%= f.date_select :start_day, {}, {class: 'form-control', style: 'display: inline-block; width: auto;'} %>
           <span>　-　</span>
@@ -17,15 +17,15 @@
         </td>
       </tr>
       <tr>
-        <th style="vertical-align: middle;">集合場所</th>
-        <td class="w-75"><%= f.text_field :meeting_place, class: "form-control" %></td>
+        <th style="vertical-align: middle;">集合場所 <span style="color: tomato">*</span></th>
+        <td class="w-75"><%= f.text_field :meeting_place, required: true, class: "form-control" %></td>
       </tr>
       <tr>
-        <th style="vertical-align: middle;">集合時間</th>
+        <th style="vertical-align: middle;">集合時間 <span style="color: tomato">*</span></th>
         <td class="w-75"><%= f.time_select :meeting_time, {}, {class: 'form-control', style: 'display: inline-block; width: auto;'} %></td>
       </tr>
       <tr>
-        <th style="vertical-align: middle;">メモ</th>
+        <th style="vertical-align: middle;">連絡事項</th>
         <td class="w-75"><%= f.text_area :memo, rows: "4", class: "form-control" %></td>
       </tr>
     </table>
