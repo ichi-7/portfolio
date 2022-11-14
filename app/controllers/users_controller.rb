@@ -12,6 +12,12 @@ class UsersController < ApplicationController
   
   def edit
     @user = User.find(params[:id])
+    # 本人でないと編集ページに行けない
+    if @user.id == current_user.id
+      render "edit"
+    else
+      redirect_to users_path
+    end
   end
   
   def update

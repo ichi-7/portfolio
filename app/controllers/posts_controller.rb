@@ -10,6 +10,12 @@ class PostsController < ApplicationController
   
   def edit
     @post = Post.find(params[:id])
+    # 本人でないと編集ページに行けない
+    if @post.user_id == current_user.id
+      render "edit"
+    else
+      redirect_to posts_path
+    end
   end
   
   def update

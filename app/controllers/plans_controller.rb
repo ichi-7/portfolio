@@ -64,6 +64,12 @@ class PlansController < ApplicationController
   
   def edit
     @plan = Plan.find(params[:id])
+    # 本人でないと編集ページに行けない
+    if @plan.user_id == current_user.id
+      render "edit"
+    else
+      redirect_to plans_path
+    end
   end
   
   def update

@@ -61,9 +61,6 @@
         <% @entries.each do |entry| %>
           <div class="card mx-auto mt-3 border-0" style="width: calc(100% / 2); background-color:rgba(0,0,0,0)">
             <div class="card-body mx-auto">
-              <% if entry.plan.end_day.before? Date.today %>
-                <span class="font-weight-bold text-danger">この旅行は終了しています。</span>
-              <% end %>
               <div class="row d-flex justify-content-center">
                 <% if entry.plan.image.attached? %>
                   <%= image_tag entry.plan.image, class: "rounded mb-3", style: "max-width: 18vw; height: 18vw; object-fit: cover" %>
@@ -80,6 +77,9 @@
                   <div class="w-100">
                     <span><i class="far fa-user"></i> <%= link_to entry.plan.user.name, user_path(entry.plan.user.id) %></span>
                   </div>
+                  <% if entry.plan.end_day.before? Date.today %>
+                    <span class="font-weight-bold text-danger">この旅行は終了しています。</span>
+                  <% end %>
                 </div>
               </div>
             </div>
