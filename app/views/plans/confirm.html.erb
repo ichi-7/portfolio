@@ -70,11 +70,12 @@
     <% end %>
     
     <div class="d-flex justify-content-center border-top mt-4 mb-5">
-      <%= f.submit "旅行企画を投稿する", class: "btn btn-outline-secondary w-50 mt-3 mb-5" %>
+      <%= f.submit "旅行企画を投稿する", data: {"turbolinks" => false}, class: "btn btn-outline-secondary w-50 mt-3 mb-5" %>
     </div>  
   </div>
   <% end %>
 </div>
+
 
 <script>
   // codeAddressでも使用する為、mapを関数外で定義&geocoderも用意

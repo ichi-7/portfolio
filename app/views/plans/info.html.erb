@@ -33,7 +33,7 @@
     <%= f.hidden_field :spot_lat, :value => params[:plan][:lat] %>
     <%= f.hidden_field :spot_lng, :value => params[:plan][:lng] %>
     <div class="d-flex justify-content-center border-top mt-4 mb-5">
-      <%= f.submit "Step③ - 確認画面 に進む", class: "btn btn-outline-secondary w-50 mt-3" %>
+      <%= f.submit "Step③ - 確認画面 に進む", data: {"turbolinks" => false}, class: "btn btn-outline-secondary w-50 mt-3" %>
     </div>  
   </div>
   <% end %>
