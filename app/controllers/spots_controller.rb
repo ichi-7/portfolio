@@ -22,7 +22,8 @@ class SpotsController < ApplicationController
       # 投稿情報を保存
       @post = Post.new(post_params[:post])
       @post.user_id = current_user.id
-      @post.spot_id = Spot.find_by(position: @spot.position, lat: @spot.lat, lng: @spot.lng).pluck(:id)
+      spot = Spot.find_by(position: @spot.position, lat: @spot.lat, lng: @spot.lng)
+      @post.spot_id = spot.id
       @post.save
       # 投稿後に記事ページに移動
       posts = Post.all.order(id: "DESC")
