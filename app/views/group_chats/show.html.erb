@@ -26,7 +26,7 @@
                 <% if chat.user.image.attached? %>
                   <%= image_tag chat.user.image, class: "rounded-circle", style: "max-width: 18vw; height: 3vw; object-fit: cover" %>
                 <% else %>
-                  <%= image_tag 'noimage', class: "rounded-circle", style: "max-width: 100%; height: 3vw; object-fit: cover" %>
+                  <%= image_tag asset_path('noimage.jpg'), class: "rounded-circle", style: "max-width: 100%; height: 3vw; object-fit: cover" %>
                 <% end %>
               </div>
               <div class="ml-2 mr-1 py-1 px-4 rounded" style="max-width: 70%; background-color: #d4dcda;">
