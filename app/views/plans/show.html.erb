@@ -26,7 +26,7 @@
         <% if @plan.image.attached? %>
           <%= image_tag @plan.image, class: "rounded", style: "max-width: 100%; height: 16vw; object-fit: cover" %>
         <% else %>
-          <%= image_tag 'noimage', class: "rounded", style: "max-width: 100%; height: 16vw; object-fit: cover" %>
+          <%= image_tag asset_path('noimage.jpg'), class: "rounded", style: "max-width: 100%; height: 16vw; object-fit: cover" %>
         <% end %>
       </div>
         
@@ -86,7 +86,7 @@
             <% if member.user.image.attached? %>
               <%= image_tag member.user.image, class: "rounded-circle", style: "max-width: 100%; height: 8vw; object-fit: cover" %>
             <% else %>
-              <%= image_tag 'noimage', class: "rounded-circle", style: "max-width: 100%; height: 8vw; object-fit: cover" %>
+              <%= image_tag asset_path('noimage.jpg'), class: "rounded-circle", style: "max-width: 100%; height: 8vw; object-fit: cover" %>
             <% end %>
             <br><%= link_to member.user.name, user_path(member.user) %>
           </div>
