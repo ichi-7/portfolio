@@ -16,7 +16,7 @@ class SpotsController < ApplicationController
     else
       @spot = Spot.new(spot_params)
       # スポット情報がまだない場合は新規登録
-      if Spot.where(position: @spot.position).where(lat: @spot.lat).where(lng: @spot.lng).count == 0 then
+      if Spot.where(position: @spot.position).count == 0 then
         @spot.save
       end
       # 投稿情報を保存
