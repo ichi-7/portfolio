@@ -7,7 +7,7 @@
       <% if @user.image.attached? %>
         <%= image_tag @user.image, class: "rounded-circle mb-3", style: "max-width: 50%; height: 16vw; object-fit: cover" %>
       <% else %>
-        <%= image_tag 'noimage', class: "rounded-circle mb-3", style: "max-width: 50%; height: 16vw; object-fit: cover" %>
+        <%= image_tag asset_path('noimage.jpg'), class: "rounded-circle mb-3", style: "max-width: 50%; height: 16vw; object-fit: cover" %>
       <% end %>
     </div>
     <div class="mb-3">
@@ -30,7 +30,7 @@
                 <% if pos.image.attached? %>
                   <%= image_tag pos.image, class: "rounded mb-3", style: "max-width: 18vw; height: 18vw; object-fit: cover" %>
                 <% else %>
-                  <%= image_tag 'noimage', class: "rounded mb-3", style: "max-width: 100%; height: 18vw; object-fit: cover" %>
+                  <%= image_tag asset_path('noimage.jpg'), class: "rounded mb-3", style: "max-width: 100%; height: 18vw; object-fit: cover" %>
                 <% end %>
               </div>
               <div class="row px-2">
@@ -65,7 +65,7 @@
                 <% if entry.plan.image.attached? %>
                   <%= image_tag entry.plan.image, class: "rounded mb-3", style: "max-width: 18vw; height: 18vw; object-fit: cover" %>
                 <% else %>
-                  <%= image_tag 'noimage', class: "rounded mb-3", style: "max-width: 100%; height: 18vw; object-fit: cover" %>
+                  <%= image_tag asset_path('noimage.jpg'), class: "rounded mb-3", style: "max-width: 100%; height: 18vw; object-fit: cover" %>
                 <% end %>
               </div>
               <div class="row px-2">
@@ -91,7 +91,9 @@
       <%= paginate @entries %>
     </div>
     <div class="d-flex justify-content-center border-top py-5">
-      <span class="h5 font-weight-bold" style="color: #5c9291; color: #5c9291;"><i class="far fa-user"></i> <%= link_to "一覧に戻る", users_path, style: "color: #5c9291; color: #5c9291; letter-spacing: 0.12em" %></span>
+      <span class="h5 font-weight-bold" style="color: #5c9291; color: #5c9291;">
+        <i class="far fa-user"></i> <%= link_to "一覧に戻る", users_path, style: "color: #5c9291; color: #5c9291; letter-spacing: 0.12em" %>
+      </span>
     </div>
   </div>
 </div>
