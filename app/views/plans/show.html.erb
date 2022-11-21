@@ -14,9 +14,9 @@
         <% if @plan.user_id == current_user.id %>
           <%= link_to "旅行を編集する", edit_plan_path(@plan.id), class: "w-100 btn btn-success" %>
         <% elsif @plan.member?(current_user) %>
-          <%= link_to "この旅行から抜ける", plan_out_path(@plan.id), class: "w-100 btn btn-danger" %>
+          <%= link_to "この旅行から抜ける", plan_out_path(@plan.id), data: {"turbolinks" => false}, class: "w-100 btn btn-danger" %>
         <% else %>
-          <%= link_to "この旅行に参加する", plan_join_path(@plan.id), class: "w-100 btn btn-primary" %>
+          <%= link_to "この旅行に参加する", plan_join_path(@plan.id), data: {"turbolinks" => false}, class: "w-100 btn btn-primary" %>
         <% end %>
       </div>
     </div>
