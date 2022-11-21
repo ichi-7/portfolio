@@ -38,7 +38,7 @@
           <% end %>
           <div class="text-left">
             <%= f.submit "投稿", class: "btn btn-outline-primary mr-2", style: "width: 45%" %>
-            <%= link_to "マップに戻る", maps_path, class: "btn btn-outline-secondary ml-2", style: "width: 45%" %>
+            <%= link_to "マップに戻る", maps_path, data: {"turbolinks" => false}, class: "btn btn-outline-secondary ml-2", style: "width: 45%" %>
           </div>
         <% end %>
       </div>
