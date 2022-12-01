@@ -20,6 +20,7 @@ class PostsController < ApplicationController
   
   def update
     pos = Post.find(params[:id])
+    pos.score = Language.get_data(post_params[:info])
     pos.update(post_params)
     redirect_to post_path(pos.id)  
   end
@@ -34,7 +35,7 @@ class PostsController < ApplicationController
   private
   
   def post_params
-    params.require(:post).permit(:title,:info,:image)
+    params.require(:post).permit(:title,:info,:image,:score)
   end
   
 end
