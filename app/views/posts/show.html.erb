@@ -15,6 +15,12 @@
     <div class="mb-3">
       <span style="line-height: 4"><%= @post.info %></span>
     </div>
+    <div>
+      <div class="bg-success float-right text-light text-center rounded px-2 mb-2" style="width:fit-content">
+        <span>感情分析スコア</span><br>
+        <span>点数：<%= @post.score %></span>
+      </div>
+    </div>
     <div class="mb-3 d-flex justify-content-end">
       <% if @post.user_id == current_user.id %>
         <span class="mr-3"><i class="fas fa-edit"></i> <%= link_to "記事を編集する", edit_post_path(@post.id) %></span>

@@ -21,6 +21,7 @@ class SpotsController < ApplicationController
       end
       # 投稿情報を保存
       @post = Post.new(post_params[:post])
+      @post.score = Language.get_data(post_params[:post][:info])
       @post.user_id = current_user.id
       @post.spot_id = Spot.find_by(position: @spot.position).id
       @post.save
