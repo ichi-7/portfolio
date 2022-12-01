@@ -5,6 +5,7 @@ class CreatePosts < ActiveRecord::Migration[6.1]
       t.integer :spot_id
       t.string :title
       t.text :info
+      t.decimal :score, precision: 5, scale: 3
       t.timestamps
     end
   end
